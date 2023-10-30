@@ -1,0 +1,153 @@
+﻿Code,AreaName,Region
+E06000015,Derby,East Midlands region
+E06000016,Leicester,East Midlands region
+E10000007,Derbyshire,East Midlands region
+E06000018,Nottingham,East Midlands region
+E10000024,Nottinghamshire,East Midlands region
+E06000061,North Northamptonshire,East Midlands region
+E06000017,Rutland,East Midlands region
+E10000019,Lincolnshire,East Midlands region
+E06000062,West Northamptonshire,East Midlands region
+E10000018,Leicestershire,East Midlands region
+E06000055,Bedford,East of England region
+E10000003,Cambridgeshire,East of England region
+E06000056,Central Bedfordshire,East of England region
+E10000012,Essex,East of England region
+E10000015,Hertfordshire,East of England region
+E06000032,Luton,East of England region
+E10000020,Norfolk,East of England region
+E06000031,Peterborough,East of England region
+E06000033,Southend-on-Sea,East of England region
+E10000029,Suffolk,East of England region
+E06000034,Thurrock,East of England region
+E09000002,Barking and Dagenham,London region
+E09000003,Barnet,London region
+E09000004,Bexley,London region
+E09000005,Brent,London region
+E09000006,Bromley,London region
+E09000007,Camden,London region
+E09000001,City of London,London region
+E09000008,Croydon,London region
+E09000009,Ealing,London region
+E09000010,Enfield,London region
+E09000011,Greenwich,London region
+E09000012,Hackney,London region
+E09000013,Hammersmith and Fulham,London region
+E09000014,Haringey,London region
+E09000015,Harrow,London region
+E09000016,Havering,London region
+E09000017,Hillingdon,London region
+E09000018,Hounslow,London region
+E09000019,Islington,London region
+E09000020,Kensington and Chelsea,London region
+E09000021,Kingston upon Thames,London region
+E09000022,Lambeth,London region
+E09000023,Lewisham,London region
+E09000024,Merton,London region
+E09000025,Newham,London region
+E09000026,Redbridge,London region
+E09000027,Richmond upon Thames,London region
+E09000028,Southwark,London region
+E09000029,Sutton,London region
+E09000030,Tower Hamlets,London region
+E09000031,Waltham Forest,London region
+E09000032,Wandsworth,London region
+E09000033,Westminster,London region
+E06000047,County Durham,North East region
+E06000005,Darlington,North East region
+E08000037,Gateshead,North East region
+E06000001,Hartlepool,North East region
+E06000002,Middlesbrough,North East region
+E08000021,Newcastle upon Tyne,North East region
+E08000022,North Tyneside,North East region
+E06000057,Northumberland,North East region
+E06000003,Redcar and Cleveland,North East region
+E08000023,South Tyneside,North East region
+E06000004,Stockton-on-Tees,North East region
+E08000024,Sunderland,North East region
+E06000008,Blackburn with Darwen,North West region
+E06000009,Blackpool,North West region
+E08000001,Bolton,North West region
+E08000002,Bury,North West region
+E06000049,Cheshire East,North West region
+E06000050,Cheshire West and Chester,North West region
+E10000006,Cumbria,North West region
+E06000006,Halton,North West region
+E08000011,Knowsley,North West region
+E10000017,Lancashire,North West region
+E08000012,Liverpool,North West region
+E08000003,Manchester,North West region
+E08000004,Oldham,North West region
+E08000005,Rochdale,North West region
+E08000006,Salford,North West region
+E08000014,Sefton,North West region
+E08000013,St. Helens,North West region
+E08000007,Stockport,North West region
+E08000008,Tameside,North West region
+E08000009,Trafford,North West region
+E06000007,Warrington,North West region
+E08000010,Wigan,North West region
+E08000015,Wirral,North West region
+E06000036,Bracknell Forest,South East region
+E06000043,Brighton and Hove,South East region
+E06000060,Buckinghamshire UA,South East region
+E10000011,East Sussex,South East region
+E10000014,Hampshire,South East region
+E06000046,Isle of Wight,South East region
+E10000016,Kent,South East region
+E06000035,Medway,South East region
+E06000042,Milton Keynes,South East region
+E10000025,Oxfordshire,South East region
+E06000044,Portsmouth,South East region
+E06000038,Reading,South East region
+E06000039,Slough,South East region
+E06000045,Southampton,South East region
+E10000030,Surrey,South East region
+E06000037,West Berkshire,South East region
+E10000032,West Sussex,South East region
+E06000040,Windsor and Maidenhead,South East region
+E06000041,Wokingham,South East region
+E06000022,Bath and North East Somerset,South West region
+E06000058,"Bournemouth, Christchurch and Poole",South West region
+E06000023,Bristol,South West region
+E06000052,Cornwall,South West region
+E10000008,Devon,South West region
+E06000059,Dorset,South West region
+E10000013,Gloucestershire,South West region
+E06000053,Isles of Scilly,South West region
+E06000024,North Somerset,South West region
+E06000026,Plymouth,South West region
+E10000027,Somerset Cty,South West region
+E06000025,South Gloucestershire,South West region
+E06000030,Swindon,South West region
+E06000027,Torbay,South West region
+E06000054,Wiltshire,South West region
+E08000025,Birmingham,West Midlands region
+E08000026,Coventry,West Midlands region
+E08000027,Dudley,West Midlands region
+E06000019,Herefordshire,West Midlands region
+E08000028,Sandwell,West Midlands region
+E06000051,Shropshire,West Midlands region
+E08000029,Solihull,West Midlands region
+E10000028,Staffordshire,West Midlands region
+E06000021,Stoke-on-Trent,West Midlands region
+E06000020,Telford and Wrekin,West Midlands region
+E08000030,Walsall,West Midlands region
+E10000031,Warwickshire,West Midlands region
+E08000031,Wolverhampton,West Midlands region
+E10000034,Worcestershire,West Midlands region
+E08000016,Barnsley,Yorkshire and Humber region
+E08000032,Bradford,Yorkshire and Humber region
+E08000033,Calderdale,Yorkshire and Humber region
+E08000017,Doncaster,Yorkshire and Humber region
+E06000011,East Riding of Yorkshire,Yorkshire and Humber region
+E06000010,Kingston upon Hull,Yorkshire and Humber region
+E08000034,Kirklees,Yorkshire and Humber region
+E08000035,Leeds,Yorkshire and Humber region
+E06000012,North East Lincolnshire,Yorkshire and Humber region
+E06000013,North Lincolnshire,Yorkshire and Humber region
+E10000023,North Yorkshire Cty,Yorkshire and Humber region
+E08000018,Rotherham,Yorkshire and Humber region
+E08000019,Sheffield,Yorkshire and Humber region
+E08000036,Wakefield,Yorkshire and Humber region
+E06000014,York,Yorkshire and Humber region
