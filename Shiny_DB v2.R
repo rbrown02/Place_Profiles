@@ -715,7 +715,7 @@ server <- function(input, output) {
   
   year <- unique(pop_data$Timeperiod)
   
-  region_map <- read_excel("~/Place_Profile_Shiny_Dashboard/Mappings.xlsx")
+  region_map <- read_excel("~/Place_Profile_Shiny_Dashboard/Mappings.csv")
   
   pop_data_reg <- merge(x=pop_data, y=region_map, by="AreaName", all.x=TRUE)
   
