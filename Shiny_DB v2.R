@@ -186,9 +186,9 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
 ################################################################################
 ################################################################################
 
-ethnicities <- read_csv("~/Place_Profile_Shiny_Dashboard/population-by-ethnicity-and-local-authority-2021.csv")
+ethnicities <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
 
-population <- read_csv("~/Place_Profile_Shiny_Dashboard/population-by-ethnicity-and-local-authority-2021.csv")
+population <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
 
 ui <- dashboardPage(skin = "blue",
                     dashboardHeader(tags$li(class = "dropdown",
@@ -720,7 +720,7 @@ server <- function(input, output) {
   
   year <- unique(pop_data$Timeperiod)
   
-  region_map <- read_csv("~/Place_Profile_Shiny_Dashboard/Mappings.csv")
+  region_map <- read_csv("./Mappings.csv")
   
   pop_data_reg <- merge(x=pop_data, y=region_map, by="AreaName", all.x=TRUE)
   
