@@ -1,8 +1,13 @@
+#install.packages('fingertipsR')
+#install.packages('fingertipscharts')
+#install.packages('tidyverse')
+#install.packages('plotly')
+#install.packages('ggrepel')
+
 library(dplyr)
 library(fingertipsR)
 library(forcats)
 library(tidyverse)
-library(writexl)
 library(shiny)
 library(shinydashboard)
 library(plotly)
@@ -715,7 +720,7 @@ server <- function(input, output) {
   
   year <- unique(pop_data$Timeperiod)
   
-  region_map <- read_excel("~/Place_Profile_Shiny_Dashboard/Mappings.csv")
+  region_map <- read_csv("~/Place_Profile_Shiny_Dashboard/Mappings.csv")
   
   pop_data_reg <- merge(x=pop_data, y=region_map, by="AreaName", all.x=TRUE)
   
