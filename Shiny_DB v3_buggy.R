@@ -1,7 +1,13 @@
 library(dplyr)
 library(fingertipsR)
 library(forcats)
-library(tidyverse)
+#library(tidyverse)
+#load individual tidyverse packages explicitly
+library(dplyr)
+library(tidyr)
+library(readr)
+library(ggplot2)
+
 library(writexl)
 library(shiny)
 library(shinydashboard)
@@ -131,7 +137,10 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
       plot.title = element_text(face = "bold")
     )
   
-  if (!missing(
+  
+  if (!missing(#fix 1####
+               #this is where there was no value being passed to the missing function
+    comparator_1
   )) {
     compdata1 <- filter(filtered_data, {{ area }} == comparator_1)
     population <- population +
@@ -145,7 +154,7 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
         ),
         linewidth = 1.5
       )
-    
+
     if (!missing(comparator_2)) {
       compdata2 <- filter(filtered_data, {{ area }} == comparator_2)
       population <- population +
@@ -166,14 +175,14 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
           values = c("black", "#E563F9")
         )
     } else {
-      population <- population +
-        scale_colour_manual(
-          name = "",
-          breaks = c(comparator_1),
-          limits = c(comparator_1),
-          values = c("black")
-        )
-    }
+  population <- population +
+    scale_colour_manual(
+      name = "",
+      breaks = c(comparator_1),
+      limits = c(comparator_1),
+      values = c("black")
+    )
+  }
   }
   
   return(population)
@@ -182,15 +191,18 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
 ################################################################################
 ################################################################################
 
-ethnicities <- read_csv("~/B&S ICS/Place_Profiles/population-by-ethnicity-and-local-authority-2021.csv")
+#replaced filepaths to locations which do not exist in this project to relative filepaths
+ethnicities <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
 
-population <- read_csv("~/B&S ICS/Place_Profiles/population-by-ethnicity-and-local-authority-2021.csv")
+population <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
 
-region_map <- read_csv("~/B&S ICS/Place_Profiles/Mappings.csv")
+region_map <- read_csv("./Mappings.csv")
 
+#replaced all references to "NHS_Region", which does not exist in the dataframe being used,
+  #to "Region", which does
 combined_df_mapped <- left_join(
   combined_df, 
-  region_map %>% select(AreaName, NHS_Region),
+  region_map %>% select(AreaName, Region),
   by = "AreaName"
 )
 
@@ -201,7 +213,7 @@ ui <- dashboardPage(skin = "blue",
                     ),
                     title = tags$img(src="image.png", width="195",height="60")),
                     dashboardSidebar(tags$div(style = "height: 20px;"),
-                                     selectInput("NHS_Region","Select region", choices = unique(combined_df_mapped$NHS_Region),selected = "England")            
+                                     selectInput("Region","Select region", choices = unique(combined_df_mapped$Region),selected = "England")            
                                      ,selectInput("area", "Select area", choices = NULL,selected = "England")
                     ),
                     dashboardBody(
@@ -303,7 +315,7 @@ ui <- dashboardPage(skin = "blue",
 server <- function(input, output, session) {
   observe({
     areas_selection <- combined_df_mapped %>%
-      filter(NHS_Region == input$NHS_Region)
+      filter(Region == input$Region)
     filtered_areas <- unique(areas_selection$AreaName)
     updateSelectInput(session, "area", choices = filtered_areas)
   })
@@ -875,17 +887,22 @@ server <- function(input, output, session) {
   pop_region_map <- read_csv("./Mappings.csv")
   
   pop_region_map <- pop_region_map %>%
-    select(-NHS_Region)
+    select(-Region)
   
   pop_chart_data_reg <- merge(x=pop_data, y=pop_region_map, by="AreaName", all.x=TRUE)
   
   output$popPlot <- renderPlot({
     selected_area <- input$area
     
-    region_name <- pop_chart_data_reg %>%
-      filter(AreaName == selected_area)
+    ##fix 2 ####
+    #no need for this (and it creates an error anyway) - we choose the region name
+      #directly in the UI - just pull through that value
+    # region_name <- pop_chart_data_reg %>%
+    #   filter(AreaName == selected_area)
+    # 
+    # selected_region <- unique(region_name$Region)
+    selected_region <- input$Region
     
-    selected_region <- unique(region_name$Region)
     filtered_pop_data <- pop_chart_data_reg %>%
       filter(Age != "All ages",
              Sex %in% c("Male", "Female"),
