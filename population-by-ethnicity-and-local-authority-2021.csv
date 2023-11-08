@@ -8,7 +8,7 @@ Barnet,White,224762,389344,0.58
 Barnet,Asian,74972,389344,0.19
 Barnet,Black,30651,389344,0.08
 Barnet,Mixed,20889,389344,0.05
-Barnet,Other,38070,389344,0.10
+Barnet,Other,38070,389344,0.1
 Barnsley,Asian,2297,244572,0.01
 Barnsley,Black,1715,244572,0.01
 Barnsley,Mixed,2293,244572,0.01
@@ -25,7 +25,7 @@ Bedford,Mixed,8586,185224,0.05
 Bedford,Other,3353,185224,0.02
 Bedford,White,140174,185224,0.76
 Bexley,White,177164,246475,0.72
-Bexley,Asian,24434,246475,0.10
+Bexley,Asian,24434,246475,0.1
 Bexley,Black,30075,246475,0.12
 Bexley,Mixed,8740,246475,0.04
 Bexley,Other,6062,246475,0.03
@@ -38,14 +38,14 @@ Blackburn with Darwen,Asian,55178,154741,0.36
 Blackburn with Darwen,Black,1406,154741,0.01
 Blackburn with Darwen,Mixed,2596,154741,0.02
 Blackburn with Darwen,Other,2169,154741,0.01
-Blackburn with Darwen,White,93392,154741,0.60
+Blackburn with Darwen,White,93392,154741,0.6
 Blackpool,Asian,3676,141039,0.03
 Blackpool,Black,711,141039,0.01
 Blackpool,Mixed,2210,141039,0.02
 Blackpool,Other,892,141039,0.01
 Blackpool,White,133550,141039,0.95
 Bolton,White,212941,295960,0.72
-Bolton,Asian,59596,295960,0.20
+Bolton,Asian,59596,295960,0.2
 Bolton,Black,11238,295960,0.04
 Bolton,Mixed,6643,295960,0.02
 Bolton,Other,5542,295960,0.02
@@ -68,7 +68,7 @@ Brent,White,117701,339821,0.35
 Brent,Asian,111515,339821,0.33
 Brent,Black,59495,339821,0.18
 Brent,Mixed,17249,339821,0.05
-Brent,Other,33861,339821,0.10
+Brent,Other,33861,339821,0.1
 Brighton and Hove,Asian,13217,277103,0.05
 Brighton and Hove,Black,5458,277103,0.02
 Brighton and Hove,Mixed,13228,277103,0.05
@@ -88,7 +88,7 @@ Buckinghamshire UA,Asian,68318,553078,0.12
 Buckinghamshire UA,Black,14269,553078,0.03
 Buckinghamshire UA,Mixed,19570,553078,0.04
 Buckinghamshire UA,Other,8757,553078,0.02
-Buckinghamshire UA,White,442164,553078,0.80
+Buckinghamshire UA,White,442164,553078,0.8
 Bury,White,160716,193851,0.83
 Bury,Asian,20593,193851,0.11
 Bury,Black,3690,193851,0.02
@@ -104,7 +104,7 @@ Cambridgeshire,Asian,39690,678847,0.06
 Cambridgeshire,Black,9745,678847,0.01
 Cambridgeshire,Mixed,19353,678847,0.03
 Cambridgeshire,Other,8896,678847,0.01
-Camden,White,125064,210136,0.60
+Camden,White,125064,210136,0.6
 Camden,Asian,38042,210136,0.18
 Camden,Black,18892,210136,0.09
 Camden,Mixed,13938,210136,0.07
@@ -113,7 +113,7 @@ Central Bedfordshire,Asian,10321,294251,0.04
 Central Bedfordshire,Black,7018,294251,0.02
 Central Bedfordshire,Mixed,8885,294251,0.03
 Central Bedfordshire,Other,2482,294251,0.01
-Central Bedfordshire,White,265545,294251,0.90
+Central Bedfordshire,White,265545,294251,0.9
 Cheshire East,Asian,9531,398772,0.02
 Cheshire East,Black,2422,398772,0.01
 Cheshire East,Mixed,7059,398772,0.02
@@ -130,14 +130,14 @@ City of London,Black,232,8584,0.03
 City of London,Mixed,470,8584,0.06
 City of London,Other,482,8584,0.06
 Cornwall,Asian,4032,570305,0.01
-Cornwall,Black,1058,570305,0.00
+Cornwall,Black,1058,570305,0
 Cornwall,Mixed,7030,570305,0.01
 Cornwall,Other,6055,570305,0.01
 Cornwall,White,552130,570305,0.97
 County Durham,Asian,7834,522067,0.02
-County Durham,Black,1740,522067,0.00
+County Durham,Black,1740,522067,0
 County Durham,Mixed,4949,522067,0.01
-County Durham,Other,2073,522067,0.00
+County Durham,Other,2073,522067,0
 County Durham,White,505471,522067,0.97
 Coventry,White,226246,345321,0.66
 Coventry,Asian,63915,345321,0.19
@@ -150,9 +150,9 @@ Croydon,Black,88441,390724,0.23
 Croydon,Mixed,29745,390724,0.08
 Croydon,Other,15066,390724,0.04
 Cumbria,Asian,4911,499847,0.01
-Cumbria,Black,1194,499847,0.00
+Cumbria,Black,1194,499847,0
 Cumbria,Mixed,4002,499847,0.01
-Cumbria,Other,1715,499847,0.00
+Cumbria,Other,1715,499847,0
 Cumbria,White,488025,499847,0.98
 Darlington,Asian,2966,107796,0.03
 Darlington,Black,701,107796,0.01
@@ -167,10 +167,10 @@ Derby,White,192871,261364,0.74
 Derbyshire,Asian,11673,794629,0.02
 Derbyshire,Black,4081,794629,0.01
 Derbyshire,Mixed,10850,794629,0.01
-Derbyshire,Other,2732,794629,0.00
+Derbyshire,Other,2732,794629,0
 Derbyshire,White,765293,794629,0.96
 Devon,Asian,11842,811633,0.02
-Devon,Black,2473,811633,0.00
+Devon,Black,2473,811633,0
 Devon,Mixed,10969,811633,0.01
 Devon,Other,3899,811633,0.01
 Devon,White,782450,811633,0.96
@@ -180,9 +180,9 @@ Doncaster,Black,3742,308104,0.01
 Doncaster,Mixed,4603,308104,0.02
 Doncaster,Other,3718,308104,0.01
 Dorset,Asian,4305,379580,0.01
-Dorset,Black,1082,379580,0.00
+Dorset,Black,1082,379580,0
 Dorset,Mixed,4436,379580,0.01
-Dorset,Other,1342,379580,0.00
+Dorset,Other,1342,379580,0
 Dorset,White,368415,379580,0.97
 Dudley,White,274596,323488,0.85
 Dudley,Asian,27047,323488,0.08
@@ -190,14 +190,14 @@ Dudley,Black,8170,323488,0.03
 Dudley,Mixed,9191,323488,0.03
 Dudley,Other,4484,323488,0.01
 Ealing,White,158463,367116,0.43
-Ealing,Asian,111241,367116,0.30
+Ealing,Asian,111241,367116,0.3
 Ealing,Black,39491,367116,0.11
 Ealing,Mixed,19161,367116,0.05
 Ealing,Other,38760,367116,0.11
 East Riding of Yorkshire,Asian,3686,342215,0.01
-East Riding of Yorkshire,Black,894,342215,0.00
+East Riding of Yorkshire,Black,894,342215,0
 East Riding of Yorkshire,Mixed,3197,342215,0.01
-East Riding of Yorkshire,Other,1276,342215,0.00
+East Riding of Yorkshire,Other,1276,342215,0
 East Riding of Yorkshire,White,333162,342215,0.97
 East Sussex,Asian,11619,545850,0.02
 East Sussex,Black,4499,545850,0.01
@@ -209,7 +209,7 @@ Enfield,Asian,37973,329985,0.12
 Enfield,Black,60512,329985,0.18
 Enfield,Mixed,19558,329985,0.06
 Enfield,Other,40058,329985,0.12
-Essex,White,1358554,1503521,0.90
+Essex,White,1358554,1503521,0.9
 Essex,Asian,56252,1503521,0.04
 Essex,Black,37392,1503521,0.03
 Essex,Mixed,36774,1503521,0.02
@@ -230,12 +230,12 @@ Greenwich,Black,60602,289065,0.21
 Greenwich,Mixed,17297,289065,0.06
 Greenwich,Other,12132,289065,0.04
 Hackney,White,137709,259147,0.53
-Hackney,Asian,26885,259147,0.10
+Hackney,Asian,26885,259147,0.1
 Hackney,Black,54645,259147,0.21
 Hackney,Mixed,17487,259147,0.07
 Hackney,Other,22421,259147,0.09
 Halton,Asian,1436,128478,0.01
-Halton,Black,511,128478,0.00
+Halton,Black,511,128478,0
 Halton,Mixed,1791,128478,0.01
 Halton,Other,764,128478,0.01
 Halton,White,123976,128478,0.97
@@ -253,7 +253,7 @@ Haringey,White,150581,264238,0.57
 Haringey,Asian,23080,264238,0.09
 Haringey,Black,46466,264238,0.18
 Haringey,Mixed,18556,264238,0.07
-Haringey,Other,25555,264238,0.10
+Haringey,Other,25555,264238,0.1
 Harrow,White,95233,261205,0.37
 Harrow,Asian,118152,261205,0.45
 Harrow,Black,19151,261205,0.07
@@ -270,7 +270,7 @@ Havering,Black,21567,262052,0.08
 Havering,Mixed,9747,262052,0.04
 Havering,Other,5274,262052,0.02
 Herefordshire,Asian,2218,187032,0.01
-Herefordshire,Black,567,187032,0.00
+Herefordshire,Black,567,187032,0
 Herefordshire,Mixed,1980,187032,0.01
 Herefordshire,Other,1019,187032,0.01
 Herefordshire,White,181248,187032,0.97
@@ -290,17 +290,17 @@ Hounslow,Black,20810,288181,0.07
 Hounslow,Mixed,13514,288181,0.05
 Hounslow,Other,20928,288181,0.07
 Isle of Wight,Asian,1663,140459,0.01
-Isle of Wight,Black,478,140459,0.00
+Isle of Wight,Black,478,140459,0
 Isle of Wight,Mixed,1720,140459,0.01
-Isle of Wight,Other,379,140459,0.00
+Isle of Wight,Other,379,140459,0
 Isle of Wight,White,136219,140459,0.97
-Isles of Scilly,Asian,6,2055,0.00
-Isles of Scilly,Black,4,2055,0.00
+Isles of Scilly,Asian,6,2055,0
+Isles of Scilly,Black,4,2055,0
 Isles of Scilly,Mixed,23,2055,0.01
 Isles of Scilly,Other,18,2055,0.01
 Isles of Scilly,White,2004,2055,0.98
 Islington,White,134754,216590,0.62
-Islington,Asian,21532,216590,0.10
+Islington,Asian,21532,216590,0.1
 Islington,Black,28743,216590,0.13
 Islington,Mixed,16231,216590,0.08
 Islington,Other,15330,216590,0.07
@@ -308,7 +308,7 @@ Kensington and Chelsea,White,91394,143373,0.64
 Kensington and Chelsea,Asian,17025,143373,0.12
 Kensington and Chelsea,Black,11279,143373,0.08
 Kensington and Chelsea,Mixed,9525,143373,0.07
-Kensington and Chelsea,Other,14150,143373,0.10
+Kensington and Chelsea,Other,14150,143373,0.1
 Kent,White,1409009,1576077,0.89
 Kent,Asian,69940,1576077,0.04
 Kent,Black,41034,1576077,0.03
@@ -345,7 +345,7 @@ Lancashire,Black,7979,1235370,0.01
 Lancashire,Mixed,19955,1235370,0.02
 Lancashire,Other,8800,1235370,0.01
 Leeds,White,641801,811953,0.79
-Leeds,Asian,78503,811953,0.10
+Leeds,Asian,78503,811953,0.1
 Leeds,Black,45376,811953,0.06
 Leeds,Mixed,27388,811953,0.03
 Leeds,Other,18885,811953,0.02
@@ -376,7 +376,7 @@ Liverpool,Mixed,16880,486088,0.04
 Liverpool,Other,16034,486088,0.03
 Luton,White,101798,225261,0.45
 Luton,Asian,83325,225261,0.37
-Luton,Black,22735,225261,0.10
+Luton,Black,22735,225261,0.1
 Luton,Mixed,9620,225261,0.04
 Luton,Other,7783,225261,0.04
 Manchester,White,313632,551938,0.57
@@ -389,7 +389,7 @@ Medway,Black,15723,279773,0.06
 Medway,Mixed,7859,279773,0.03
 Medway,Other,3960,279773,0.01
 Medway,White,235747,279773,0.84
-Merton,White,129617,215187,0.60
+Merton,White,129617,215187,0.6
 Merton,Asian,40019,215187,0.19
 Merton,Black,22887,215187,0.11
 Merton,Mixed,12765,215187,0.06
@@ -400,11 +400,11 @@ Middlesbrough,Mixed,3001,143922,0.02
 Middlesbrough,Other,3468,143922,0.02
 Middlesbrough,White,118547,143922,0.82
 Milton Keynes,Asian,35645,287060,0.12
-Milton Keynes,Black,27851,287060,0.10
+Milton Keynes,Black,27851,287060,0.1
 Milton Keynes,Mixed,11725,287060,0.04
 Milton Keynes,Other,5725,287060,0.02
 Milton Keynes,White,206114,287060,0.72
-Newcastle upon Tyne,White,240002,300127,0.80
+Newcastle upon Tyne,White,240002,300127,0.8
 Newcastle upon Tyne,Asian,34128,300127,0.11
 Newcastle upon Tyne,Black,9921,300127,0.03
 Newcastle upon Tyne,Mixed,6920,300127,0.02
@@ -433,7 +433,7 @@ North Northamptonshire,Asian,12726,359523,0.04
 North Northamptonshire,Black,11017,359523,0.03
 North Northamptonshire,Mixed,8175,359523,0.02
 North Northamptonshire,Other,2941,359523,0.01
-North Northamptonshire,White,324664,359523,0.90
+North Northamptonshire,White,324664,359523,0.9
 North Somerset,Asian,3322,216729,0.02
 North Somerset,Black,1139,216729,0.01
 North Somerset,Mixed,3635,216729,0.02
@@ -445,17 +445,17 @@ North Tyneside,Black,1281,208968,0.01
 North Tyneside,Mixed,2879,208968,0.01
 North Tyneside,Other,1204,208968,0.01
 North Yorkshire Cty,Asian,8320,615499,0.01
-North Yorkshire Cty,Black,2459,615499,0.00
+North Yorkshire Cty,Black,2459,615499,0
 North Yorkshire Cty,Mixed,6722,615499,0.01
 North Yorkshire Cty,Other,2843,615499,0.01
 North Yorkshire Cty,White,595155,615499,0.97
 Northumberland,Asian,3374,320566,0.01
-Northumberland,Black,598,320566,0.00
+Northumberland,Black,598,320566,0
 Northumberland,Mixed,2557,320566,0.01
-Northumberland,Other,1010,320566,0.00
+Northumberland,Other,1010,320566,0
 Northumberland,White,313027,320566,0.98
 Nottingham,Asian,48217,323635,0.15
-Nottingham,Black,32215,323635,0.10
+Nottingham,Black,32215,323635,0.1
 Nottingham,Mixed,19063,323635,0.06
 Nottingham,Other,10710,323635,0.03
 Nottingham,White,213430,323635,0.66
@@ -500,9 +500,9 @@ Redbridge,Black,26096,310261,0.08
 Redbridge,Mixed,12736,310261,0.04
 Redbridge,Other,16622,310261,0.05
 Redcar and Cleveland,Asian,1160,136530,0.01
-Redcar and Cleveland,Black,265,136530,0.00
+Redcar and Cleveland,Black,265,136530,0
 Redcar and Cleveland,Mixed,1185,136530,0.01
-Redcar and Cleveland,Other,532,136530,0.00
+Redcar and Cleveland,Other,532,136530,0
 Redcar and Cleveland,White,133388,136530,0.98
 Richmond upon Thames,White,157111,195277,0.81
 Richmond upon Thames,Asian,17467,195277,0.09
@@ -540,14 +540,14 @@ Sefton,Black,1509,279233,0.01
 Sefton,Mixed,4056,279233,0.02
 Sefton,Other,1834,279233,0.01
 Sheffield,White,440216,556523,0.79
-Sheffield,Asian,53560,556523,0.10
+Sheffield,Asian,53560,556523,0.1
 Sheffield,Black,25512,556523,0.05
 Sheffield,Mixed,19704,556523,0.04
 Sheffield,Other,17531,556523,0.03
 Shropshire,Asian,4324,323607,0.01
-Shropshire,Black,1117,323607,0.00
+Shropshire,Black,1117,323607,0
 Shropshire,Mixed,3861,323607,0.01
-Shropshire,Other,1429,323607,0.00
+Shropshire,Other,1429,323607,0
 Shropshire,White,312876,323607,0.97
 Slough,White,57134,158500,0.36
 Slough,Asian,74093,158500,0.47
@@ -585,12 +585,12 @@ Southend-on-Sea,Mixed,5553,180685,0.03
 Southend-on-Sea,Other,2036,180685,0.01
 Southend-on-Sea,White,158079,180685,0.88
 Southwark,White,158220,307640,0.51
-Southwark,Asian,30540,307640,0.10
+Southwark,Asian,30540,307640,0.1
 Southwark,Black,77299,307640,0.25
 Southwark,Mixed,22151,307640,0.07
 Southwark,Other,19430,307640,0.06
 St. Helens,Asian,2579,183248,0.01
-St. Helens,Black,776,183248,0.00
+St. Helens,Black,776,183248,0
 St. Helens,Mixed,1971,183248,0.01
 St. Helens,Other,1034,183248,0.01
 St. Helens,White,176888,183248,0.97
@@ -609,7 +609,7 @@ Stockton-on-Tees,Black,2203,196593,0.01
 Stockton-on-Tees,Mixed,2737,196593,0.01
 Stockton-on-Tees,Other,1664,196593,0.01
 Stockton-on-Tees,White,180937,196593,0.92
-Stoke-on-Trent,Asian,25597,258369,0.10
+Stoke-on-Trent,Asian,25597,258369,0.1
 Stoke-on-Trent,Black,6884,258369,0.03
 Stoke-on-Trent,Mixed,5860,258369,0.02
 Stoke-on-Trent,Other,4329,258369,0.02
@@ -655,9 +655,9 @@ Thurrock,Mixed,5252,175993,0.03
 Thurrock,Other,2675,175993,0.02
 Thurrock,White,134984,175993,0.77
 Torbay,Asian,3552,255413,0.01
-Torbay,Black,816,255413,0.00
+Torbay,Black,816,255413,0
 Torbay,Mixed,3750,255413,0.02
-Torbay,Other,1022,255413,0.00
+Torbay,Other,1022,255413,0
 Torbay,White,246273,255413,0.96
 Tower Hamlets,White,122266,310306,0.39
 Tower Hamlets,Asian,137856,310306,0.44
@@ -680,13 +680,13 @@ Walsall,Black,13024,284126,0.05
 Walsall,Mixed,9317,284126,0.03
 Walsall,Other,5862,284126,0.02
 Waltham Forest,White,147024,278428,0.53
-Waltham Forest,Asian,55545,278428,0.20
+Waltham Forest,Asian,55545,278428,0.2
 Waltham Forest,Black,41647,278428,0.15
 Waltham Forest,Mixed,17983,278428,0.07
 Waltham Forest,Other,16229,278428,0.06
 Wandsworth,White,222090,327506,0.68
 Wandsworth,Asian,38314,327506,0.12
-Wandsworth,Black,33062,327506,0.10
+Wandsworth,Black,33062,327506,0.1
 Wandsworth,Mixed,20598,327506,0.06
 Wandsworth,Other,13442,327506,0.04
 Warrington,Asian,6954,210973,0.03
@@ -733,17 +733,17 @@ Windsor and Maidenhead,Asian,20072,153497,0.13
 Windsor and Maidenhead,Black,2358,153497,0.02
 Windsor and Maidenhead,Mixed,5238,153497,0.03
 Windsor and Maidenhead,Other,3278,153497,0.02
-Windsor and Maidenhead,White,122551,153497,0.80
+Windsor and Maidenhead,White,122551,153497,0.8
 Wirral,White,304692,320199,0.95
 Wirral,Asian,7302,320199,0.02
-Wirral,Black,1389,320199,0.00
+Wirral,Black,1389,320199,0
 Wirral,Mixed,4930,320199,0.02
 Wirral,Other,1886,320199,0.01
 Wokingham,Asian,22868,177502,0.13
 Wokingham,Black,4306,177502,0.02
 Wokingham,Mixed,5574,177502,0.03
 Wokingham,Other,2903,177502,0.02
-Wokingham,White,141851,177502,0.80
+Wokingham,White,141851,177502,0.8
 Wolverhampton,White,159707,263726,0.61
 Wolverhampton,Asian,55901,263726,0.21
 Wolverhampton,Black,24636,263726,0.09
@@ -764,11 +764,11 @@ London region,Asian,1817647,8799736,0.21
 London region,Black,1188369,8799736,0.14
 London region,Mixed,505776,8799736,0.06
 London region,Other,556772,8799736,0.06
-Yorkshire and Humber region,Asian,487061,5480783,0.09
-Yorkshire and Humber region,Black,117649,5480783,0.02
-Yorkshire and Humber region,Mixed,117011,5480783,0.02
-Yorkshire and Humber region,Other,79096,5480783,0.01
-Yorkshire and Humber region,White,4679966,5480783,0.85
+Yorkshire and the Humber region,Asian,487061,5480783,0.09
+Yorkshire and the Humber region,Black,117649,5480783,0.02
+Yorkshire and the Humber region,Mixed,117011,5480783,0.02
+Yorkshire and the Humber region,Other,79096,5480783,0.01
+Yorkshire and the Humber region,White,4679966,5480783,0.85
 South West region,Asian,159183,5701177,0.03
 South West region,Black,69610,5701177,0.01
 South West region,Mixed,114081,5701177,0.02
@@ -805,7 +805,7 @@ East Midlands region,Mixed,117247,4880049,0.02
 East Midlands region,Other,61946,4880049,0.01
 East Midlands region,White,4179766,4880049,0.86
 England,White,45783379,56490065,0.81
-England,Asian,5426423,56490065,0.10
+England,Asian,5426423,56490065,0.1
 England,Black,2381722,56490065,0.04
 England,Mixed,1669375,56490065,0.03
 England,Other,1229166,56490065,0.02
