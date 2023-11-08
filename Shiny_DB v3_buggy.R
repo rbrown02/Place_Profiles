@@ -1,13 +1,10 @@
 library(dplyr)
 library(fingertipsR)
 library(forcats)
-#library(tidyverse)
-#load individual tidyverse packages explicitly
 library(dplyr)
 library(tidyr)
 library(readr)
 library(ggplot2)
-
 library(writexl)
 library(shiny)
 library(shinydashboard)
@@ -15,6 +12,7 @@ library(plotly)
 library(fingertipscharts)
 library(readxl)
 library(ggrepel)
+library(DT)
 
 # SELECT AREA TYPE FROM: 'Counties & UAs'; 'Districts & UAs','NHS Regions','Region','Sub-ICBs','ICBs'
 input_area_name <- "Counties & UAs"
@@ -192,6 +190,11 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
 ################################################################################
 
 #replaced filepaths to locations which do not exist in this project to relative filepaths
+
+metadata <- read_csv("./metadata.csv")
+
+LA_mappings <- read_csv("./LA_metadata.csv")
+
 ethnicities <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
 
 population <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
@@ -206,6 +209,13 @@ combined_df_mapped <- left_join(
   by = "AreaName"
 )
 
+region_df <- left_join(
+  combined_df,
+  region_map,
+  by = "AreaName"
+)
+
+
 ui <- dashboardPage(skin = "blue",
                     dashboardHeader(tags$li(class = "dropdown",
                                             tags$style(".main-header {max-height: 62px}"),
@@ -214,7 +224,8 @@ ui <- dashboardPage(skin = "blue",
                     title = tags$img(src="image.png", width="195",height="60")),
                     dashboardSidebar(tags$div(style = "height: 20px;"),
                                      selectInput("Region","Select region", choices = unique(combined_df_mapped$Region),selected = "England")            
-                                     ,selectInput("area", "Select area", choices = NULL,selected = "England")
+                                     ,selectInput("area", "Select area", choices = NULL,selected = "England"),
+                                     selectInput("compare","Select Comparator",choices = c("National","Regional"))
                     ),
                     dashboardBody(
                       tabsetPanel(
@@ -307,6 +318,42 @@ ui <- dashboardPage(skin = "blue",
                                        valueBoxOutput("smoke", width = 3))
                                    
                                  )
+                        ),
+                        tabPanel("Download",
+                                 tags$div(style = "height: 20px;"),
+                                 fluidRow(
+                                   box(title = "Download Regional Data",
+                                       status = "primary",
+                                       solidHeader = TRUE,
+                                       width = 12,
+                                       selectInput("dataset", "Choose a dataset:",
+                                                   choices = unique(combined_df_mapped$Region)),
+                                       downloadButton("downloadData", "Download csv")
+                                   ))
+                        ),
+                        tabPanel("Metadata",
+                                 tags$div(style = "height: 20px;"),
+                                 fluidRow(
+                                   box(title = "Metadata",
+                                       status = "primary",
+                                       solidHeader = TRUE,
+                                       width = 12,
+                                       dataTableOutput("metadata")
+                                       
+                                   )
+                                 )
+                        ),
+                        tabPanel("Mappings",
+                                 tags$div(style = "height: 20px;"),
+                                 fluidRow(
+                                   box(title = "ICB to LA",
+                                       status = "primary",
+                                       solidHeader = TRUE,
+                                       width = 12,
+                                       dataTableOutput("LA_mappings")
+                                       
+                                   )
+                                 )
                         )
                       )
                     )
@@ -320,19 +367,31 @@ server <- function(input, output, session) {
     updateSelectInput(session, "area", choices = filtered_areas)
   })
   
+  output_data <- reactive({
+    region_df %>%
+      filter(Region == input$dataset) %>%
+      select(-Code,-Region)
+  })
+  
   output$ineqfem <- renderValueBox({
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
              IndicatorName == "Inequality in life expectancy at birth",
              Sex == "Female")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Inequality in life expectancy at birth",
+               Sex == "Female")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
              IndicatorName == "Inequality in life expectancy at birth",
-             Sex == "Female")
+             Sex == "Female")}
     value <- as.character(format(unique(filtered_data$Value),nsmall=1))
-    value_eng <- as.character(format(unique(filtered_england$Value),nsmall=1))
-    title_join <- paste("Inequality in life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- as.character(format(unique(filtered_compare$Value),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Inequality in life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Inequality in life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)      
     valueBox(
       value, title, color = "purple", icon = icon("scale-unbalanced")
@@ -345,13 +404,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Inequality in life expectancy at birth",
              Sex == "Male")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Inequality in life expectancy at birth",
+               Sex == "Male")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
              IndicatorName == "Inequality in life expectancy at birth",
-             Sex == "Male")
+             Sex == "Male")}
     value <- as.character(format(unique(filtered_data$Value),nsmall=1))
-    value_eng <- as.character(format(unique(filtered_england$Value),nsmall=1))
-    title_join <- paste("Inequality in life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- as.character(format(unique(filtered_compare$Value),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Inequality in life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Inequality in life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "light-blue",icon = icon("scale-unbalanced") )
@@ -363,14 +428,20 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Life expectancy at birth",
              Sex == "Female")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Life expectancy at birth",
+               Sex == "Female")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
              IndicatorName == "Life expectancy at birth",
-             Sex == "Female")
+             Sex == "Female")}
     value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))
-    value_eng <- as.character(format(round(unique(filtered_england$Value),1),nsmall=1))
-    title_join <- paste("Life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
-    title <- HTML(title_join)      
+    value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
+    title <- HTML(title_join)   
     valueBox(
       value, title, color = "purple", icon = icon("calendar-days")
     )
@@ -382,13 +453,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Life expectancy at birth",
              Sex == "Male")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Life expectancy at birth",
+               Sex == "Male")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
              IndicatorName == "Life expectancy at birth",
-             Sex == "Male")
+             Sex == "Male")}
     value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))
-    value_eng <- as.character(format(round(unique(filtered_england$Value),1),nsmall=1))
-    title_join <- paste("Life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "light-blue",icon = icon("calendar-days"))
@@ -400,13 +477,18 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Healthy life expectancy at birth",
              Sex == "Female")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "Healthy life expectancy at birth",
-             Sex == "Female")
+             Sex == "Female")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "Healthy life expectancy at birth",
+             Sex == "Female")}
     value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))
-    value_eng <- as.character(format(round(unique(filtered_england$Value),1),nsmall=1))
-    title_join <- paste("Healthy life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Healthy life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Healthy life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)      
     valueBox(
       value, title, color = "purple", icon = icon("heart")
@@ -419,13 +501,18 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Healthy life expectancy at birth",
              Sex == "Male")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "Healthy life expectancy at birth",
-             Sex == "Male")
+             Sex == "Male")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "Healthy life expectancy at birth",
+             Sex == "Male")}
     value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))
-    value_eng <- as.character(format(round(unique(filtered_england$Value),1),nsmall=1))
-    title_join <- paste("Life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Healthy life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Healthy life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "light-blue",icon = icon("heart"))
@@ -439,12 +526,17 @@ server <- function(input, output, session) {
              Sex == "Persons")
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "School readiness: percentage of children achieving a good level of development at the end of Reception",
-             Sex == "Persons")
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("School ready at end of Reception<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "School readiness: percentage of children achieving a good level of development at the end of Reception",
+             Sex == "Persons")}
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("School ready at end of Reception<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("School ready at end of Reception<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "aqua",icon = icon("graduation-cap") )
@@ -456,16 +548,23 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Average Attainment 8 score",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
-             IndicatorName == "Average Attainment 8 score",
-             Sex == "Persons")
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Average Attainment 8 score",
+               Sex == "Persons")}
+    else {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == input$Region,
+               IndicatorName == "Average Attainment 8 score",
+               Sex == "Persons")}
     value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))
-    value_eng <- as.character(format(round(unique(filtered_england$Value),1),nsmall=1))
-    title_join <- paste("Average Attainment 8 score<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Average Attainment 8 score<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Average Attainment 8 score<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("ranking-star") )
+      value, title, color = "aqua",icon = icon("ranking-star"))
   })
   
   output$NEET <- renderValueBox({
@@ -474,14 +573,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "16 to 17 year olds not in education, employment or training (NEET) or whose activity is not known",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "16 to 17 year olds not in education, employment or training (NEET) or whose activity is not known",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "16 to 17 year olds not in education, employment or training (NEET) or whose activity is not known",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("16-17 year old NEET<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("16-17 year old NEET<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("16-17 year old NEET<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "aqua",icon = icon("person-circle-question") )
@@ -493,14 +597,20 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Long-Term Unemployment. Rate per 1,000 working age population",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Long-Term Unemployment. Rate per 1,000 working age population",
+               Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
              IndicatorName == "Long-Term Unemployment. Rate per 1,000 working age population",
-             Sex == "Persons")
+             Sex == "Persons")}
     if(input$area %in% regions_list) {value = paste("N/a for regions")}
     else {value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))}
-    value_eng <- as.character(format(round(unique(filtered_england$Value),1),nsmall=1))
-    title_join <- paste("Long-Term Unemployment per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
+    if(input$compare == "National") {title_join <- paste("Long-Term Unemployment per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Long-Term Unemployment per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ","N/A")}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "aqua",icon = icon("briefcase") )
@@ -512,14 +622,21 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Fuel poverty (low income, low energy efficiency methodology)",
              Sex == "Not applicable")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
-             IndicatorName == "Fuel poverty (low income, low energy efficiency methodology)",
-             Sex == "Not applicable")
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Fuel poverty (low income, low energy efficiency methodology)",
+               Sex == "Not applicable")}
+    else {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == input$Region,
+               IndicatorName == "Fuel poverty (low income, low energy efficiency methodology)",
+               Sex == "Not applicable")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Households in Fuel Poverty<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Households in Fuel Poverty<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Households in Fuel Poverty<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("gas-pump") )
@@ -531,13 +648,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Homelessness - households with dependent children owed a duty under the Homelessness Reduction Act",
              Sex == "Not applicable")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Homelessness - households with dependent children owed a duty under the Homelessness Reduction Act",
+               Sex == "Not applicable")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
              IndicatorName == "Homelessness - households with dependent children owed a duty under the Homelessness Reduction Act",
-             Sex == "Not applicable")
+             Sex == "Not applicable")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)))
-    title_join <- paste("Households with children classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
+    if(input$compare == "National") {title_join <- paste("Households with children classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Households with children classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("house-circle-xmark") )
@@ -549,13 +672,18 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Homelessness: households owed a duty under the Homelessness Reduction Act",
              Sex == "Not applicable")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "Homelessness: households owed a duty under the Homelessness Reduction Act",
-             Sex == "Not applicable")
+             Sex == "Not applicable")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "Homelessness: households owed a duty under the Homelessness Reduction Act",
+             Sex == "Not applicable")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)))
-    title_join <- paste("Households classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
+    if(input$compare == "National") {title_join <- paste("Households classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Households classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("house-circle-xmark") )
@@ -567,14 +695,21 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Children in absolute low income families (under 16s)",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
-      filter(AreaName == "England",
-             IndicatorName == "Children in absolute low income families (under 16s)",
-             Sex == "Persons")
+    if(input$compare == "National") {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == "England",
+               IndicatorName == "Children in absolute low income families (under 16s)",
+               Sex == "Persons")}
+    else {
+      filtered_compare <- combined_df %>%
+        filter(AreaName == input$Region,
+               IndicatorName == "Children in absolute low income families (under 16s)",
+               Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Under 16s living in absolute low income families<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Under 16s living in absolute low income families<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Under 16s living in absolute low income families<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("money-bills") )
@@ -586,15 +721,20 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Older people living alone, Percentage of people aged 65 and over who are living alone",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "Older people living alone, Percentage of people aged 65 and over who are living alone",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "Older people living alone, Percentage of people aged 65 and over who are living alone",
+             Sex == "Persons")}
     if(input$area %in% regions_list) {value = paste("N/a for regions")}
     else if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Aged 65+ living alone<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Aged 65+ living alone<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Aged 65+ living alone<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: N/A")}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("person-cane") )
@@ -606,14 +746,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always or some of the time",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always or some of the time",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always or some of the time",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Adults who feel lonely<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Adults who feel lonely<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Adults who feel lonely<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("heart-crack") )
@@ -625,14 +770,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,
              IndicatorName == "Percentage of physically active adults",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
              IndicatorName == "Percentage of physically active adults",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "Percentage of physically active adults",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Physically Active Adults<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Physically Active Adults<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Physically Active Adults<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("person-running") )
@@ -644,14 +794,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,             
              IndicatorName == "Percentage of physically active children and young people",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
              IndicatorName == "Percentage of physically active children and young people",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Percentage of physically active children and young people",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Physically Active CYP<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Physically Active CYP<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Physically Active CYP<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "blue",icon = icon("person-running") )
@@ -661,16 +816,21 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Reception: Prevalence of overweight (including obesity)",
+             IndicatorName == "Reception prevalence of overweight (including obesity)",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Reception: Prevalence of overweight (including obesity)",
-             Sex == "Persons")
+             IndicatorName == "Reception prevalence of overweight (including obesity)",
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Reception prevalence of overweight (including obesity)",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Reception children overweight<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Reception children overweight<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Reception children overweight<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "aqua",icon = icon("weight-scale") )
@@ -680,16 +840,21 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Year 6: Prevalence of overweight (including obesity)",
+             IndicatorName == "Year 6 prevalence of overweight (including obesity)",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Year 6: Prevalence of overweight (including obesity)",
-             Sex == "Persons")
+             IndicatorName == "Year 6 prevalence of overweight (including obesity)",
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Year 6 prevalence of overweight (including obesity)",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Year 6 children overweight<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Year 6 children overweight<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Year 6 children overweight<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "aqua",icon = icon("weight-scale") )
@@ -699,16 +864,21 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Year 6: Prevalence of obesity (including severe obesity)",
+             IndicatorName == "Year 6 prevalence of obesity (including severe obesity)",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Year 6: Prevalence of obesity (including severe obesity)",
-             Sex == "Persons")
+             IndicatorName == "Year 6 prevalence of obesity (including severe obesity)",
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Year 6 prevalence of obesity (including severe obesity)",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Year 6 children obese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Year 6 children obese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Year 6 children obese<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "aqua",icon = icon("weight-scale") )
@@ -718,16 +888,21 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Reception: Prevalence of obesity (including severe obesity)",
+             IndicatorName == "Reception prevalence of obesity (including severe obesity)",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Reception: Prevalence of obesity (including severe obesity)",
-             Sex == "Persons")
+             IndicatorName == "Reception prevalence of obesity (including severe obesity)",
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Reception prevalence of obesity (including severe obesity)",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Reception children obese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Reception children obese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Reception children obese<br>",unique(filtered_data$Timeperiod),"<br>Regioal Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "aqua",icon = icon("weight-scale") )
@@ -739,13 +914,18 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,             
              IndicatorName == "Admission episodes for alcohol-related conditions (Narrow)",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
              IndicatorName == "Admission episodes for alcohol-related conditions (Narrow)",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Admission episodes for alcohol-related conditions (Narrow)",
+             Sex == "Persons")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)))
-    title_join <- paste("Alcohol admits per 100,000 (all ages)<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
+    if(input$compare == "National") {title_join <- paste("Alcohol admits per 100,000 (all ages)<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Alcohol admits per 100,000 (all ages)<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("wine-glass") )
@@ -757,13 +937,18 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,             
              IndicatorName == "Admission episodes for alcohol-specific conditions - Under 18s",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
              IndicatorName == "Admission episodes for alcohol-specific conditions - Under 18s",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Admission episodes for alcohol-specific conditions - Under 18s",
+             Sex == "Persons")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)))
-    title_join <- paste("Alcohol admits per 100,000 (< 18 yrs)<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
+    if(input$compare == "National") {title_join <- paste("Alcohol admits per 100,000 (< 18 yrs)<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Alcohol admits per 100,000 (< 18 yrs)<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "blue",icon = icon("wine-glass") )
@@ -775,14 +960,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,             
              IndicatorName == "Percentage of adults (aged 18+) classified as obese",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
              IndicatorName == "Percentage of adults (aged 18+) classified as obese",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Percentage of adults (aged 18+) classified as obese",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Adults Obsese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Adults Obsese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Adults Obsese<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("weight-scale") )
@@ -794,14 +984,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,             
              IndicatorName == "School pupils with social, emotional and mental health needs: % of school pupils with social, emotional and mental health needs",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
              IndicatorName == "School pupils with social, emotional and mental health needs: % of school pupils with social, emotional and mental health needs",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "School pupils with social, emotional and mental health needs: % of school pupils with social, emotional and mental health needs",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Pupils with social, emotional and MH needs<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Pupils with social, emotional and MH needs<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Pupils with social, emotional and MH needs<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "blue",icon = icon("hand-holding-heart") )
@@ -813,14 +1008,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,             
              IndicatorName == "Percentage of three year olds with experience of visually obvious tooth decay",
              Sex == "Persons")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
              IndicatorName == "Percentage of three year olds with experience of visually obvious tooth decay",
-             Sex == "Persons")
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Percentage of three year olds with experience of visually obvious tooth decay",
+             Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("3 year olds with tooth decay<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("3 year olds with tooth decay<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("3 year olds with tooth decay<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "blue",icon = icon("tooth") )
@@ -832,14 +1032,19 @@ server <- function(input, output, session) {
       filter(AreaName == selected_area,             
              IndicatorName == "Smoking status at time of delivery",
              Sex == "Female")
-    filtered_england <- combined_df %>%
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
              IndicatorName == "Smoking status at time of delivery",
-             Sex == "Female")
+             Sex == "Female")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,             
+             IndicatorName == "Smoking status at time of delivery",
+             Sex == "Female")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
-    value_eng <- paste(as.character(format(round(unique(filtered_england$Value),1),nsmall=1)),"%")
-    title_join <- paste("Smoking at time of delivery<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
+    if(input$compare == "National") {title_join <- paste("Smoking at time of delivery<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste("Smoking at time of delivery<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "purple",icon = icon("smoking") )
@@ -847,17 +1052,22 @@ server <- function(input, output, session) {
   
   output$deprived <- renderValueBox({
     selected_area <- input$area
-    england_data <- combined_df %>%
-      filter(AreaName == "England",
-             IndicatorName == "Deprivation score (IMD 2019)",
-             Sex == "Persons")
-    filtered_data <- combined_df %>%
+    filtered_data  <- combined_df %>%
       filter(AreaName == selected_area,
              IndicatorName == "Deprivation score (IMD 2019)",
              Sex == "Persons")
+    if(input$compare == "National") {filtered_compare <- combined_df %>%
+      filter(AreaName == "England",
+             IndicatorName == "Deprivation score (IMD 2019)",
+             Sex == "Persons")}
+    else {filtered_compare <- combined_df %>%
+      filter(AreaName == input$Region,
+             IndicatorName == "Deprivation score (IMD 2019)",
+             Sex == "Persons")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
-    value_eng <- paste(as.character(format(round(unique(england_data$Value),1),nsmall=1)))
-    title_join <- paste("Deprivation score (IMD 2019)<br>",unique(filtered_data$Timeperiod),"<br>National Benckmark: ",value_eng)
+    value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
+    if(input$compare == "National") {title_join <- paste("Deprivation score (IMD 2019)<br>",unique(filtered_data$Timeperiod),"<br>National Benckmark: ",value_comp)}
+    else {title_join <- paste("Deprivation score (IMD 2019)<br>",unique(filtered_data$Timeperiod),"<br>Regional Benckmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
       value, title, color = "blue",icon = icon("scale-unbalanced-flip") )
@@ -967,6 +1177,22 @@ server <- function(input, output, session) {
     
     pie_plot + coord_flip()
     
+  })
+  
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$dataset, " Place Profile Data.csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(output_data(), file, row.names = FALSE)
+    }    )
+  
+  output$metadata <- renderDataTable({
+    datatable(metadata, options = list(pageLength = 10))
+  })
+  
+  output$LA_mappings <- renderDataTable({
+    datatable(LA_mappings, options = list(pageLength = 10))
   })
   
 }
