@@ -191,15 +191,15 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
 
 #replaced filepaths to locations which do not exist in this project to relative filepaths
 
-metadata <- read_csv("./metadata.csv")
+metadata <- read_csv("~/Place_Profiles/metadata.csv")
 
-LA_mappings <- read_csv("./LA_metadata.csv")
+LA_mappings <- read_csv("~/Place_Profiles/LA_metadata.csv")
 
-ethnicities <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
+ethnicities <- read_csv("~/Place_Profiles/population-by-ethnicity-and-local-authority-2021.csv")
 
-population <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
+population <- read_csv("~/Place_Profiles/population-by-ethnicity-and-local-authority-2021.csv")
 
-region_map <- read_csv("./Mappings.csv")
+region_map <- read_csv("~/Place_Profiles/Mappings.csv")
 
 #replaced all references to "NHS_Region", which does not exist in the dataframe being used,
   #to "Region", which does
@@ -255,38 +255,27 @@ ui <- dashboardPage(skin = "blue",
                         ),
                         tabPanel("Education, Employment and Households",
                                  tags$div(style = "height: 20px;"),
-                                 box(title = "Education and Employment",
-                                     status = "primary",
-                                     solidHeader = TRUE,
-                                     width = 12,
-                                     fluidRow(
-                                       column(
-                                         width = 6,
-                                         valueBoxOutput("schoolread", width = 6),
-                                         valueBoxOutput("avgattainment", width = 6)
-                                       ),
-                                       column(
-                                         width = 6,
-                                         valueBoxOutput("NEET",width=6),
-                                         valueBoxOutput("unemployment",width=6)
-                                       )
-                                     )
-                                 ),
-                                 box(
-                                   title = "Households and Loneliness",
-                                   status = "primary",
-                                   solidHeader = TRUE,
-                                   width = 12,
-                                   fluidRow(
-                                     column(width = 4, valueBoxOutput("fuelpov", width = 10)),
-                                     column(width = 4, valueBoxOutput("homeless", width = 10)),
-                                     column(width = 4, valueBoxOutput("chomeless", width = 10)),
-                                     column(width = 4, valueBoxOutput("lowincome", width = 10)),
-                                     column(width = 4, valueBoxOutput("oldalone", width = 10)),
-                                     column(width = 4, valueBoxOutput("lonely", width = 10))
-                                   )
-                                 )
-                        ),
+                                 fluidRow(
+                                   box(title = "Education and Employment",
+                                       status = "primary",
+                                       solidHeader = TRUE,
+                                       width = 12,
+                                       valueBoxOutput("schoolread", width = 3),
+                                       valueBoxOutput("avgattainment", width = 3),
+                                       valueBoxOutput("NEET", width = 3),
+                                       valueBoxOutput("unemployment", width = 3)),
+                                   
+                                   box(title = "Households and Loneliness",
+                                       status = "primary",
+                                       solidHeader = TRUE,
+                                       width = 12,
+                                       valueBoxOutput("fuelpov", width = 3),
+                                       valueBoxOutput("homeless", width = 3),
+                                       valueBoxOutput("chomeless", width = 3),
+                                       valueBoxOutput("lowincome", width = 3),
+                                       valueBoxOutput("oldalone", width = 3),
+                                       valueBoxOutput("lonely", width = 3)),
+                                 )),
                         tabPanel("Risk Factors",
                                  tags$div(style = "height: 20px;"),
                                  fluidRow(
@@ -539,7 +528,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("School ready at end of Reception<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("graduation-cap") )
+      value, title, color = "blue",icon = icon("graduation-cap") )
   })
   
   output$avgattainment <- renderValueBox({
@@ -564,7 +553,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Average Attainment 8 score<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("ranking-star"))
+      value, title, color = "blue",icon = icon("ranking-star"))
   })
   
   output$NEET <- renderValueBox({
@@ -588,7 +577,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("16-17 year old NEET<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("person-circle-question") )
+      value, title, color = "blue",icon = icon("person-circle-question") )
   })
   
   output$unemployment <- renderValueBox({
@@ -613,7 +602,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Long-Term Unemployment per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ","N/A")}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("briefcase") )
+      value, title, color = "blue",icon = icon("briefcase") )
   })
   
   output$fuelpov <- renderValueBox({
@@ -785,7 +774,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Physically Active Adults<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "purple",icon = icon("person-running") )
+      value, title, color = "light-blue",icon = icon("person-running") )
   })
   
   output$childrenactive <- renderValueBox({
@@ -833,7 +822,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Reception children overweight<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("weight-scale") )
+      value, title, color = "purple",icon = icon("weight-scale") )
   })
   
   output$y6over <- renderValueBox({
@@ -857,7 +846,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Year 6 children overweight<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("weight-scale") )
+      value, title, color = "purple",icon = icon("weight-scale") )
   })
   
   output$y6obese <- renderValueBox({
@@ -881,7 +870,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Year 6 children obese<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("weight-scale") )
+      value, title, color = "purple",icon = icon("weight-scale") )
   })
   
   output$recepobese <- renderValueBox({
@@ -905,7 +894,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Reception children obese<br>",unique(filtered_data$Timeperiod),"<br>Regioal Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "aqua",icon = icon("weight-scale") )
+      value, title, color = "purple",icon = icon("weight-scale") )
   })
   
   output$adultalc <- renderValueBox({
@@ -928,7 +917,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Alcohol admits per 100,000 (all ages)<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "purple",icon = icon("wine-glass") )
+      value, title, color = "light-blue",icon = icon("wine-glass") )
   })
   
   output$childalc <- renderValueBox({
@@ -975,7 +964,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Adults Obsese<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "purple",icon = icon("weight-scale") )
+      value, title, color = "light-blue",icon = icon("weight-scale") )
   })
   
   output$schoolMH <- renderValueBox({
@@ -1047,7 +1036,7 @@ server <- function(input, output, session) {
     else {title_join <- paste("Smoking at time of delivery<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- HTML(title_join)
     valueBox(
-      value, title, color = "purple",icon = icon("smoking") )
+      value, title, color = "light-blue",icon = icon("smoking") )
   })
   
   output$deprived <- renderValueBox({
@@ -1094,7 +1083,7 @@ server <- function(input, output, session) {
   
   year <- unique(pop_data$Timeperiod)
   
-  pop_region_map <- read_csv("./Mappings.csv")
+  pop_region_map <- read_csv("~/Place_Profiles/Mappings.csv")
   
   pop_region_map <- pop_region_map %>%
     select(-Region)
