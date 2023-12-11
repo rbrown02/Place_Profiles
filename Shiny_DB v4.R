@@ -15,31 +15,30 @@ library(ggrepel)
 library(DT)
 
 # SELECT AREA TYPE FROM: 'Counties & UAs'; 'Districts & UAs','NHS Regions','Region','Sub-ICBs','ICBs'
-input_area_name <- "Counties & UAs"
-
-# Adjust area type
-area_type <- (if (input_area_name == "Counties & UAs") { 402 }
-              else if (input_area_name == "Districts & UAs") { 401 }
-              else if (input_area_name == "NHS regions") { 223 }
-              else if (input_area_name == "Region") { 6 }
-              else if (input_area_name == "Sub-ICBs") { 66 }
-              else if (input_area_name == "ICBs") { 221 }
-              else { "" })
+area_name <- 402
+area_name_2 <- 502
 
 regions_list <- c("East Midlands region", "East of England region", "London region",
                   "North East region", "North West region", "South East region",
                   "South West region", "West Midlands region","Yorkshire and the Humber region")
 
 # Input indicator ID and the corresponding y-label depending on data type
-input_indicators <- data.frame(Indicator_ID = c(90366, 92901, 90631, 93378, 93203, 93098, 1730, 90362, 
-                                                93553, 93759, 93739, 93103, 93758, 93701, 93736, 93014, 
-                                                93570, 20601, 20602, 90319, 90323, 92904, 93764, 93881, 
-                                                91871, 92500, 93085))
+input_indicators_1 <- data.frame(Indicator_ID = c(90366, 90631, 93378, 93203, 93098, 1730, 90362, 
+                                                  93553, 93759, 93739, 93103, 93758, 93701, 93736, 93014, 
+                                                  93570, 20601, 20602, 90319, 90323, 92904, 93764, 93881, 
+                                                  91871, 92500, 93085))
+input_indicators_2 <- data.frame(Indicator_ID = c(92901))
 
-indicator_ids <- input_indicators$Indicator_ID
+
+
+indicator_ids <- input_indicators_1$Indicator_ID
 new_indicator_ids <- indicator_ids
 
+indicator_ids_2 <- input_indicators_2$Indicator_ID
+new_indicator_ids_2 <- indicator_ids_2
+
 data_frames_list <- list()
+data_frames_list_2 <- list()
 
 i <- 1
 while (i <= length(new_indicator_ids)) {
@@ -80,7 +79,45 @@ while (i <= length(new_indicator_ids)) {
   cat("Processed indicator ID:", indicator_id, "\n")
 }
 
-combined_df <- bind_rows(data_frames_list)
+j <- 1
+while (j <= length(new_indicator_ids_2)) {
+  indicator_id_2 <- new_indicator_ids_2[j]
+  
+  data_frame <- fingertips_data(
+    IndicatorID = indicator_id_2,
+    AreaTypeID = area_name_2
+  )
+  
+  if (length(unique(data_frame$Sex)) == 1) {
+    sex <- unique(data_frame$Sex)
+  } else if ("Persons" %in% unique(data_frame$Sex)) {
+    sex <- "Persons"
+  } else if ("Not applicable" %in% unique(data_frame$Sex)) {
+    sex <- "Not applicable"
+  } else if (sum(new_indicator_ids_2 == indicator_id_2) > 1) {
+    sex <- "Male"
+  } else {
+    new_indicator_ids_2 <- c(new_indicator_ids_2, indicator_id_2)
+    sex <- "Female"
+  }
+  j <- j + 1
+  
+  data_frame_2 <- data_frame %>%
+    filter(!is.na(TimeperiodSortable)) %>%
+    group_by(Sex, AreaName) %>%
+    filter(TimeperiodSortable == max(TimeperiodSortable),
+           Sex == sex) %>%
+    select("IndicatorName", "AreaName", "Sex", "Timeperiod", "Value", "ComparedtoEnglandvalueorpercentiles")
+  
+  data_frames_list_2[[j]] <- data_frame_2
+  
+  cat("Processed indicator ID:", indicator_id_2, "\n")
+}
+
+combined_df_1 <- bind_rows(data_frames_list)
+combined_df_2 <- bind_rows(data_frames_list_2)
+combined_df <- bind_rows(data_frames_list,data_frames_list_2)
+
 
 ################################################################################
 ################################~POP DATA~######################################
@@ -138,7 +175,7 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
   
   if (!missing(#fix 1####
                #this is where there was no value being passed to the missing function
-    comparator_1
+               comparator_1
   )) {
     compdata1 <- filter(filtered_data, {{ area }} == comparator_1)
     population <- population +
@@ -152,7 +189,7 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
         ),
         linewidth = 1.5
       )
-
+    
     if (!missing(comparator_2)) {
       compdata2 <- filter(filtered_data, {{ area }} == comparator_2)
       population <- population +
@@ -173,14 +210,14 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
           values = c("black", "#E563F9")
         )
     } else {
-  population <- population +
-    scale_colour_manual(
-      name = "",
-      breaks = c(comparator_1),
-      limits = c(comparator_1),
-      values = c("black")
-    )
-  }
+      population <- population +
+        scale_colour_manual(
+          name = "",
+          breaks = c(comparator_1),
+          limits = c(comparator_1),
+          values = c("black")
+        )
+    }
   }
   
   return(population)
@@ -202,7 +239,7 @@ population <- read_csv("~/Place_Profiles/population-by-ethnicity-and-local-autho
 region_map <- read_csv("~/Place_Profiles/Mappings.csv")
 
 #replaced all references to "NHS_Region", which does not exist in the dataframe being used,
-  #to "Region", which does
+#to "Region", which does
 combined_df_mapped <- left_join(
   combined_df, 
   region_map %>% select(AreaName, Region),
@@ -1095,7 +1132,7 @@ server <- function(input, output, session) {
     
     ##fix 2 ####
     #no need for this (and it creates an error anyway) - we choose the region name
-      #directly in the UI - just pull through that value
+    #directly in the UI - just pull through that value
     # region_name <- pop_chart_data_reg %>%
     #   filter(AreaName == selected_area)
     # 
