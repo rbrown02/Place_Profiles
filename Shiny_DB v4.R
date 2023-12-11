@@ -228,11 +228,11 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
 
 #replaced filepaths to locations which do not exist in this project to relative filepaths
 
-metadata <- read_csv("~/Place_Profiles/metadata.csv")
+metadata <- read_csv("./metadata.csv")
 
-LA_mappings <- read_csv("~/Place_Profiles/LA_metadata.csv")
+LA_mappings <- read_csv("./LA_metadata.csv")
 
-ethnicities <- read_csv("~/Place_Profiles/population-by-ethnicity-and-local-authority-2021.csv")
+ethnicities <- read_csv./population-by-ethnicity-and-local-authority-2021.csv")
 
 population <- read_csv("~/Place_Profiles/population-by-ethnicity-and-local-authority-2021.csv")
 
@@ -1120,7 +1120,7 @@ server <- function(input, output, session) {
   
   year <- unique(pop_data$Timeperiod)
   
-  pop_region_map <- read_csv("~/Place_Profiles/Mappings.csv")
+  pop_region_map <- read_csv("./Mappings.csv")
   
   pop_region_map <- pop_region_map %>%
     select(-Region)
