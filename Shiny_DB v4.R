@@ -232,11 +232,11 @@ metadata <- read_csv("./metadata.csv")
 
 LA_mappings <- read_csv("./LA_metadata.csv")
 
-ethnicities <- read_csv./population-by-ethnicity-and-local-authority-2021.csv")
+ethnicities <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
 
-population <- read_csv("~/Place_Profiles/population-by-ethnicity-and-local-authority-2021.csv")
+population <- read_csv("./population-by-ethnicity-and-local-authority-2021.csv")
 
-region_map <- read_csv("~/Place_Profiles/Mappings.csv")
+region_map <- read_csv("./Mappings.csv")
 
 #replaced all references to "NHS_Region", which does not exist in the dataframe being used,
 #to "Region", which does
