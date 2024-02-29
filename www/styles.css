@@ -1,0 +1,13 @@
+@font-face {
+font-family: 'Arial';
+}
+
+body, h1, h2, h3, h4, .main-header .box-header .box-body {
+	font-family: 'Arial';
+        font-size: 20px
+}
+
+.small-box, .small-box bg-blue, .small-box bg-navy, small-box bg-purple, .small-box bg-light_blue, p {
+	font-family: 'Arial';
+	font-size: 20px
+}
