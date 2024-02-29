@@ -15,7 +15,8 @@ library(ggrepel)
 library(DT)
 
 # SELECT AREA TYPE FROM: 'Counties & UAs'; 'Districts & UAs','NHS Regions','Region','Sub-ICBs','ICBs'
-area_name <- 402
+area_type <- 402
+#area_name <- 402
 area_name_2 <- 502
 
 regions_list <- c("East Midlands region", "East of England region", "London region",
