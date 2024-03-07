@@ -270,11 +270,18 @@ ui <- dashboardPage(#kin = "blue",
                                             tags$style(".main-header {max-height: 62px}"),
                                             tags$style(".main-header .logo {height: 62px}")
                     ),
-                    title = tags$img(src="image.png", width="195",height="60")),
-                    dashboardSidebar(tags$div(style = "height: 20px;"),
+                    title = tags$img(src="image.png", width="175",height="60")),
+                    dashboardSidebar(tags$div(style = "height: 30px;"),
                                      selectInput("Region","Select region", choices = unique(combined_df_mapped$Region),selected = "England")            
                                      ,selectInput("area", "Select area", choices = NULL,selected = "England"),
-                                     selectInput("compare","Select Comparator",choices = c("National","Regional"))
+                                     selectInput("compare","Select Comparator",choices = c("National","Regional")),
+                                     tags$style(HTML("
+                                     .selectize-input,
+                                     .selectize-dropdown {
+                                     font-size: 14px;
+                                    }
+                                    "))
+                                     
                     ),
                     dashboardBody(
                       #This bit calls the custom style sheet for modifying text font and size
@@ -284,6 +291,54 @@ ui <- dashboardPage(#kin = "blue",
                       includeCSS("www/styles.css"),
                       tabsetPanel(
                         type = "tabs",
+                        tabPanel("Cover Page",
+                                 tags$div(style = "height: 10px;"),
+                                 tags$div(
+                                   class = "outer",
+                                   tags$div(
+                                     class = "middle",
+                                     tags$div(
+                                       class = "inner",
+                                       tags$h1(HTML("<u><strong>Background</strong></u>"), style = "font-size: 20px"),
+                                       tags$p(HTML("This dashboard has been produced for convenience, and to show how you can represent this publicly available data, 
+                              it is not a monitored or validated tool - use at your own peril!"), style = "font-size: 20px"),
+                                       tags$div(style = "height: 5px;"),
+                                       tags$p(HTML("Fingertips is a large collection of public health data (managed by OHID). It provides easy access to a rich source 
+                               of indicators across a range of health and wellbeing topics. This is publicly available data and on the website, it is organised 
+                               into themed profiles. Using the web-based application provides a good way to view and compare organisations within themed profiles 
+                               but there are limitations when it comes to looking at metrics across a number of themes."), style = "font-size: 20px"),
+                                       tags$div(style = "height: 5px;"),
+                                       tags$p(HTML("The metrics from Fingertips are shown in the dashboard at a geographical level of local authority. The sidebar allows 
+                               users to view national, regional and local authority data. To view data for a given local authority ‘Select region’ where the local 
+                               authority and then use the ‘Select area’ drop down. The dashboard also allows you to either compare local authority values to the 
+                               national values or to the value for the region the local authority sits under by using the ‘Select comparator’ drop down."), 
+                                              style = "font-size: 20px"),
+                                       tags$div(style = "height: 10px;"),
+                                       tags$h2(HTML("<u><strong>Dashboard Navigation</strong></u>"), style = "font-size: 20px"),
+                                       tags$ul(
+                                       tags$li(HTML("<strong>Demographics</strong>: key demographic information including population by age and sex; ethnicity breakdown; 
+                                                     deprivation scores and various life expectancy metrics"), style = "font-size: 20px"),
+                                       tags$li(HTML("<strong>Education, Employment and Households</strong>: provides metrics on school readiness and attainment, unemployment, 
+                                                    homelessness, income deprivation, fuel poverty and loneliness"), style = "font-size: 20px"),
+                                       tags$li(HTML("<strong>Risk Factors</strong>: provides metrics on physical activity, alcohol and smoking, obesity, children with 
+                                                    social/emotional/mental health needs and tooth decay in children"), style = "font-size: 20px"),
+                                       tags$li(HTML("<strong>Download</strong>: enables export of regional data in csv format"), style = "font-size: 20px"),
+                                       tags$li(HTML("<strong>Metadata</strong>: lists all measures in dashboard and provides link to Fingertips site"), style = "font-size: 20px"),
+                                       tags$li(HTML("<strong>Mappings</strong>: map of ICBs to local government areas. Some areas sit across multiple ICBs therefore the 
+                                       mapping is not perfect and includes which partial government areas fall under ICBs"), style = "font-size: 20px")
+                                       ),
+                                       tags$div(style = "height: 10px;"),
+                                       tags$h3(HTML("<u><strong>Dashboard Devlopment</strong></u>"), style = "font-size: 20px"),
+                                       tags$p(HTML("This dashboard was developed by the NECS Consultancy Analytics Team. To access the source code please refer to my 
+                                       Github page: https://github.com/rbrown02"), style = "font-size: 20px"),
+                                       tags$p(HTML("All data is from OHID’s Fingertips platform and has been pulled into the dashboard through an API using the fingertipsR 
+                                                   package (https://github.com/ropensci/fingertipsR) developed by Sebastian Fox. The population pyramid was also created by 
+                                                   code developed by Sebastian Fox’s fingertipsCharts package."), style = "font-size: 20px"),
+                                       
+                                     )
+                                   )
+                                 )
+                        ),
                         tabPanel("Demographics",
                                  tags$div(style = "height: 10px;"),
                                  fluidRow(
@@ -435,7 +490,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(unique(filtered_compare$Value),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Inequality in life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Inequality in life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)      
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")    
     valueBox(
       value, title, color = "purple", icon = icon("scale-unbalanced")
     )
@@ -460,7 +515,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(unique(filtered_compare$Value),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Inequality in life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Inequality in life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "light-blue",icon = icon("scale-unbalanced") )
   })
@@ -484,7 +539,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)   
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")   
     valueBox(
       value, title, color = "purple", icon = icon("calendar-days")
     )
@@ -509,7 +564,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "light-blue",icon = icon("calendar-days"))
   })
@@ -532,7 +587,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Healthy life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Healthy life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)      
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")     
     valueBox(
       value, title, color = "purple", icon = icon("heart")
     )
@@ -556,7 +611,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Healthy life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Healthy life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "light-blue",icon = icon("heart"))
   })
@@ -580,7 +635,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("School ready at end of Reception<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("School ready at end of Reception<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("graduation-cap") )
   })
@@ -605,7 +660,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Average Attainment 8 score<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Average Attainment 8 score<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("ranking-star"))
   })
@@ -629,7 +684,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("16-17 year old NEET<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("16-17 year old NEET<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("person-circle-question") )
   })
@@ -654,7 +709,7 @@ server <- function(input, output, session) {
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Long-Term Unemployment per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Long-Term Unemployment per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ","N/A")}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("briefcase") )
   })
@@ -680,7 +735,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Households in Fuel Poverty<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Households in Fuel Poverty<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("gas-pump") )
   })
@@ -703,8 +758,8 @@ server <- function(input, output, session) {
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
     if(input$compare == "National") {title_join <- paste("Households with children classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
-    else {title_join <- paste("Households with children classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    else {title_join <- paste("Households with homeless children per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("house-circle-xmark") )
   })
@@ -727,7 +782,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
     if(input$compare == "National") {title_join <- paste("Households classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Households classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("house-circle-xmark") )
   })
@@ -753,7 +808,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Under 16s living in absolute low income families<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Under 16s living in absolute low income families<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("money-bills") )
   })
@@ -778,7 +833,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Aged 65+ living alone<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Aged 65+ living alone<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: N/A")}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("person-cane") )
   })
@@ -802,7 +857,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Adults who feel lonely<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Adults who feel lonely<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("heart-crack") )
   })
@@ -826,7 +881,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Physically Active Adults<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Physically Active Adults<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "light-blue",icon = icon("person-running") )
   })
@@ -850,7 +905,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Physically Active CYP<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Physically Active CYP<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("person-running") )
   })
@@ -874,7 +929,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Reception children overweight<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Reception children overweight<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("weight-scale") )
   })
@@ -898,7 +953,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Year 6 children overweight<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Year 6 children overweight<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("weight-scale") )
   })
@@ -922,7 +977,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Year 6 children obese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Year 6 children obese<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("weight-scale") )
   })
@@ -946,7 +1001,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Reception children obese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Reception children obese<br>",unique(filtered_data$Timeperiod),"<br>Regioal Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "purple",icon = icon("weight-scale") )
   })
@@ -969,7 +1024,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
     if(input$compare == "National") {title_join <- paste("Alcohol admits per 100,000 (all ages)<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Alcohol admits per 100,000 (all ages)<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "light-blue",icon = icon("wine-glass") )
   })
@@ -992,7 +1047,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
     if(input$compare == "National") {title_join <- paste("Alcohol admits per 100,000 (< 18 yrs)<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Alcohol admits per 100,000 (< 18 yrs)<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("wine-glass") )
   })
@@ -1016,7 +1071,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Adults Obsese<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Adults Obsese<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "light-blue",icon = icon("weight-scale") )
   })
@@ -1040,7 +1095,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Pupils with social, emotional and MH needs<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Pupils with social, emotional and MH needs<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("hand-holding-heart") )
   })
@@ -1064,7 +1119,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("3 year olds with tooth decay<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("3 year olds with tooth decay<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("tooth") )
   })
@@ -1088,7 +1143,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("Smoking at time of delivery<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Smoking at time of delivery<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "light-blue",icon = icon("smoking") )
   })
@@ -1111,7 +1166,7 @@ server <- function(input, output, session) {
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
     if(input$compare == "National") {title_join <- paste("Deprivation score (IMD 2019)<br>",unique(filtered_data$Timeperiod),"<br>National Benckmark: ",value_comp)}
     else {title_join <- paste("Deprivation score (IMD 2019)<br>",unique(filtered_data$Timeperiod),"<br>Regional Benckmark: ",value_comp)}
-    title <- HTML(title_join)
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       value, title, color = "blue",icon = icon("scale-unbalanced-flip") )
   })
