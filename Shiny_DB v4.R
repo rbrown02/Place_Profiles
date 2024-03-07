@@ -15,7 +15,8 @@ library(ggrepel)
 library(DT)
 
 # SELECT AREA TYPE FROM: 'Counties & UAs'; 'Districts & UAs','NHS Regions','Region','Sub-ICBs','ICBs'
-area_name <- 402
+area_type <- 402
+#area_name <- 402
 area_name_2 <- 502
 
 regions_list <- c("East Midlands region", "East of England region", "London region",
@@ -23,7 +24,8 @@ regions_list <- c("East Midlands region", "East of England region", "London regi
                   "South West region", "West Midlands region","Yorkshire and the Humber region")
 
 # Input indicator ID and the corresponding y-label depending on data type
-input_indicators_1 <- data.frame(Indicator_ID = c(90366, 90631, 93378, 93203, 93098, 1730, 90362, 
+input_indicators_1 <- data.frame(Indicator_ID = c(90366, 90631, 93378, 
+                                                  93203, 93098, 1730, 90362, 
                                                   93553, 93759, 93739, 93103, 93758, 93701, 93736, 93014, 
                                                   93570, 20601, 20602, 90319, 90323, 92904, 93764, 93881, 
                                                   91871, 92500, 93085))
@@ -252,8 +254,18 @@ region_df <- left_join(
   by = "AreaName"
 )
 
+#the default colours in the shiny dashboard theme come from adminlte_color
+  #you can reassign them using the fresh package, as is done here
+mytheme <- fresh::create_theme(
+  fresh::adminlte_color(
+    light_blue = "#005EB8", #NHS Blue
+    blue = "#003087", #NHS Dark Blue
+    purple = "#330072" #NHS Purple
+    
+  )
+)
 
-ui <- dashboardPage(skin = "blue",
+ui <- dashboardPage(#kin = "blue",
                     dashboardHeader(tags$li(class = "dropdown",
                                             tags$style(".main-header {max-height: 62px}"),
                                             tags$style(".main-header .logo {height: 62px}")
@@ -265,6 +277,11 @@ ui <- dashboardPage(skin = "blue",
                                      selectInput("compare","Select Comparator",choices = c("National","Regional"))
                     ),
                     dashboardBody(
+                      #This bit calls the custom style sheet for modifying text font and size
+                        #you can do the colour reassignments etc. here too,
+                        #becomes quite involved quickly though
+                      fresh::use_theme(mytheme),
+                      includeCSS("www/styles.css"),
                       tabsetPanel(
                         type = "tabs",
                         tabPanel("Demographics",
@@ -1106,7 +1123,9 @@ server <- function(input, output, session) {
       summarise(Population = sum(Ethnic_Population))
     formatted_value <- scales::comma(unique(filtered_pop$Population))
     title_join <- paste(" ","<br>Population<br>", "2021")
-    title <- HTML(title_join)
+    #change font size in the valuebox directly using the tags$p function
+      #ideally would set this across all valueboxes in the css, but can't get it to work
+    title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
       formatted_value, title, color = "blue", icon = icon("users-line")
     )
@@ -1200,6 +1219,8 @@ server <- function(input, output, session) {
     
     # Customize the colors
     pie_plot <- pie_plot + scale_fill_manual(values = custom_colors)
+    
+    #ie_plot <- pie_plot + viridis::scale_fill_viridis(discrete=TRUE, option = "rocket")
     
     pie_plot + coord_flip()
     
