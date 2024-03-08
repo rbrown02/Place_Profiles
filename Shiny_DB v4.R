@@ -270,7 +270,7 @@ ui <- dashboardPage(#kin = "blue",
                                             tags$style(".main-header {max-height: 62px}"),
                                             tags$style(".main-header .logo {height: 62px}")
                     ),
-                    title = tags$img(src="image.png", width="175",height="60")),
+                    title = tags$img(src="image2.png", width="175",height="60")),
                     dashboardSidebar(tags$div(style = "height: 30px;"),
                                      selectInput("Region","Select region", choices = unique(combined_df_mapped$Region),selected = "England")            
                                      ,selectInput("area", "Select area", choices = NULL,selected = "England"),
