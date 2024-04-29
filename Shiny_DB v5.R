@@ -1,4 +1,4 @@
-library(dplyr)
+#library(dplyr)
 library(fingertipsR)
 library(forcats)
 library(dplyr)
@@ -13,8 +13,6 @@ library(fingertipscharts)
 library(readxl)
 library(ggrepel)
 library(DT)
-
-start_time <- Sys.time()
 
 # SELECT AREA TYPE FROM: 'Counties & UAs'; 'Districts & UAs','NHS Regions','Region','Sub-ICBs','ICBs'
 area_type <- 402
@@ -44,20 +42,23 @@ new_indicator_ids_2 <- indicator_ids_2
 data_frames_list <- list()
 data_frames_list_2 <- list()
 
+# Call API once to pull in all data needed then subset for each stage of while loop below
+data_frame <- fingertips_data(
+  IndicatorID = new_indicator_ids,
+  AreaTypeID = area_type
+)
+
 i <- 1
 while (i <= length(new_indicator_ids)) {
   indicator_id <- new_indicator_ids[i]
+  sub_data_frame <- data_frame %>%
+    filter(IndicatorID == indicator_id)
   
-  data_frame <- fingertips_data(
-    IndicatorID = indicator_id,
-    AreaTypeID = area_type
-  )
-  
-  if (length(unique(data_frame$Sex)) == 1) {
-    sex <- unique(data_frame$Sex)
-  } else if ("Persons" %in% unique(data_frame$Sex)) {
+  if (length(unique(sub_data_frame$Sex)) == 1) {
+    sex <- unique(sub_data_frame$Sex)
+  } else if ("Persons" %in% unique(sub_data_frame$Sex)) {
     sex <- "Persons"
-  } else if ("Not applicable" %in% unique(data_frame$Sex)) {
+  } else if ("Not applicable" %in% unique(sub_data_frame$Sex)) {
     sex <- "Not applicable"
   } else if (sum(new_indicator_ids == indicator_id) > 1) {
     sex <- "Male"
@@ -67,7 +68,7 @@ while (i <= length(new_indicator_ids)) {
   }
   i <- i + 1
   
-  data_frame <- data_frame %>%
+  i_data_frame <- sub_data_frame %>%
     filter(!is.na(TimeperiodSortable)) %>%
     group_by(Sex, AreaName) %>%
     filter(TimeperiodSortable == max(TimeperiodSortable),
@@ -78,25 +79,27 @@ while (i <= length(new_indicator_ids)) {
            !(indicator_id == 91871 & Age != "School age")) %>%
     select("IndicatorName", "AreaName", "Sex", "Timeperiod", "Value", "ComparedtoEnglandvalueorpercentiles")
   
-  data_frames_list[[i]] <- data_frame
+  data_frames_list[[i]] <- i_data_frame
   
   cat("Processed indicator ID:", indicator_id, "\n")
 }
 
+data_frame2 <- fingertips_data(
+  IndicatorID = new_indicator_ids_2,
+  AreaTypeID = area_name_2
+)
+
 j <- 1
 while (j <= length(new_indicator_ids_2)) {
   indicator_id_2 <- new_indicator_ids_2[j]
+  sub_data_frame <- data_frame2 %>%
+    filter(IndicatorID == indicator_id_2)
   
-  data_frame <- fingertips_data(
-    IndicatorID = indicator_id_2,
-    AreaTypeID = area_name_2
-  )
-  
-  if (length(unique(data_frame$Sex)) == 1) {
-    sex <- unique(data_frame$Sex)
-  } else if ("Persons" %in% unique(data_frame$Sex)) {
+  if (length(unique(sub_data_frame$Sex)) == 1) {
+    sex <- unique(sub_data_frame$Sex)
+  } else if ("Persons" %in% unique(sub_data_frame$Sex)) {
     sex <- "Persons"
-  } else if ("Not applicable" %in% unique(data_frame$Sex)) {
+  } else if ("Not applicable" %in% unique(sub_data_frame$Sex)) {
     sex <- "Not applicable"
   } else if (sum(new_indicator_ids_2 == indicator_id_2) > 1) {
     sex <- "Male"
@@ -106,14 +109,14 @@ while (j <= length(new_indicator_ids_2)) {
   }
   j <- j + 1
   
-  data_frame_2 <- data_frame %>%
+  j_data_frame_2 <- sub_data_frame %>%
     filter(!is.na(TimeperiodSortable)) %>%
     group_by(Sex, AreaName) %>%
     filter(TimeperiodSortable == max(TimeperiodSortable),
            Sex == sex) %>%
     select("IndicatorName", "AreaName", "Sex", "Timeperiod", "Value", "ComparedtoEnglandvalueorpercentiles")
   
-  data_frames_list_2[[j]] <- data_frame_2
+  data_frames_list_2[[j]] <- j_data_frame_2
   
   cat("Processed indicator ID:", indicator_id_2, "\n")
 }
@@ -123,9 +126,6 @@ combined_df_2 <- bind_rows(data_frames_list_2)
 combined_df <- bind_rows(data_frames_list,data_frames_list_2)
 
 View(combined_df)
-
-end_time <- Sys.time()
-end_time - start_time
 
 
 ################################################################################
@@ -335,7 +335,7 @@ ui <- dashboardPage(#kin = "blue",
                                        mapping is not perfect and includes which partial government areas fall under ICBs"), style = "font-size: 20px")
                                        ),
                                        tags$div(style = "height: 10px;"),
-                                       tags$h3(HTML("<u><strong>Dashboard Devlopment</strong></u>"), style = "font-size: 20px"),
+                                       tags$h3(HTML("<u><strong>Dashboard Development</strong></u>"), style = "font-size: 20px"),
                                        tags$p(HTML("This dashboard was developed by the NECS Consultancy Analytics Team. To access the source code please refer to my 
                                        Github page: https://github.com/rbrown02"), style = "font-size: 20px"),
                                        tags$p(HTML("All data is from OHID’s Fingertips platform and has been pulled into the dashboard through an API using the fingertipsR 
@@ -1308,7 +1308,6 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 
-end_time2 <- Sys.time()
-end_time2 - end.time
+
 
 
