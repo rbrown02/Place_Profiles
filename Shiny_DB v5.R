@@ -1,4 +1,4 @@
-#library(dplyr)
+library(stringr)
 library(fingertipsR)
 library(forcats)
 library(dplyr)
@@ -9,7 +9,6 @@ library(writexl)
 library(shiny)
 library(shinydashboard)
 library(plotly)
-library(fingertipscharts)
 library(readxl)
 library(ggrepel)
 library(DT)
@@ -125,8 +124,8 @@ combined_df_1 <- bind_rows(data_frames_list)
 combined_df_2 <- bind_rows(data_frames_list_2)
 combined_df <- bind_rows(data_frames_list,data_frames_list_2)
 
-View(combined_df)
-
+combined_df <- combined_df %>%
+  mutate(AreaName = str_remove_all(AreaName, " \\(statistical\\)"))
 
 ################################################################################
 ################################~POP DATA~######################################
@@ -1063,15 +1062,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Percentage of adults (aged 18+) classified as obese",
+             IndicatorName == "Obesity prevalence in adults",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Percentage of adults (aged 18+) classified as obese",
+             IndicatorName == "Obesity prevalence in adults",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Percentage of adults (aged 18+) classified as obese",
+             IndicatorName == "Obesity prevalence in adults",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
