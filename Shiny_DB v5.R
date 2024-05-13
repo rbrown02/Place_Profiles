@@ -1120,7 +1120,8 @@ server <- function(input, output, session) {
       filter(AreaName == input$Region,             
              IndicatorName == "Percentage of three year olds with experience of visually obvious tooth decay",
              Sex == "Persons")}
-    if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
+    if(nrow(filtered_data) == 0) {value = paste("No data available")}
+    else if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste("3 year olds with tooth decay<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
