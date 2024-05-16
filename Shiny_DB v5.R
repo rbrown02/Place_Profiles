@@ -237,6 +237,7 @@ generate_ggplot_chart <- function(data, value, sex, age, area, area_name, compar
 #replaced filepaths to locations which do not exist in this project to relative filepaths
 
 metadata <- read_csv("./metadata.csv")
+metadata$Link <- paste0("<a href = '", metadata$Link, "'>", metadata$Link, "</a>")
 
 LA_mappings <- read_csv("./LA_metadata.csv")
 
@@ -270,6 +271,9 @@ mytheme <- fresh::create_theme(
     
   )
 )
+
+url1 <- a("https://github.com/rbrown02", href = "https://github.com/rbrown02")
+url2 <- a("https://github.com/ropensci/fingertipsR", href = "https://github.com/ropensci/fingertipsR")
 
 ui <- dashboardPage(#kin = "blue",
                     dashboardHeader(tags$li(class = "dropdown",
@@ -335,10 +339,10 @@ ui <- dashboardPage(#kin = "blue",
                                        ),
                                        tags$div(style = "height: 10px;"),
                                        tags$h3(HTML("<u><strong>Dashboard Development</strong></u>"), style = "font-size: 20px"),
-                                       tags$p(HTML("This dashboard was developed by the NECS Consultancy Analytics Team. To access the source code please refer to my 
-                                       Github page: https://github.com/rbrown02"), style = "font-size: 20px"),
-                                       tags$p(HTML("All data is from OHID’s Fingertips platform and has been pulled into the dashboard through an API using the fingertipsR 
-                                                   package (https://github.com/ropensci/fingertipsR) developed by Sebastian Fox. The population pyramid was also created by 
+                                       tags$p(tagList("This dashboard was developed by the NECS Consultancy Analytics Team. To access the source code please refer to my 
+                                       Github page:", url1), style = "font-size: 20px"),
+                                       tags$p(tagList("All data is from OHID’s Fingertips platform and has been pulled into the dashboard through an API using the fingertipsR 
+                                                   package (", url2, ") developed by Sebastian Fox. The population pyramid was also created by 
                                                    code developed by Sebastian Fox’s fingertipsCharts package."), style = "font-size: 20px"),
                                        
                                      )
@@ -1297,7 +1301,7 @@ server <- function(input, output, session) {
     }    )
   
   output$metadata <- renderDataTable({
-    datatable(metadata, options = list(pageLength = 10))
+    datatable(metadata, options = list(pageLength = 10), escape = FALSE)
   })
   
   output$LA_mappings <- renderDataTable({
