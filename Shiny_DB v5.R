@@ -1211,6 +1211,9 @@ server <- function(input, output, session) {
     select(-Region)
   
   pop_chart_data_reg <- merge(x=pop_data, y=pop_region_map, by="AreaName", all.x=TRUE)
+
+    pop_chart_data_reg <- pop_chart_data_reg %>%
+    mutate(AreaName = str_remove_all(AreaName, " \\(statistical\\)"))
   
   output$popPlot <- renderPlot({
     selected_area <- input$area
