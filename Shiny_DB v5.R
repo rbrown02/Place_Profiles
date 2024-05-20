@@ -767,7 +767,7 @@ server <- function(input, output, session) {
              Sex == "Not applicable")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
-    if(input$compare == "National") {title_join <- paste("Households with children classed at homeless per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    if(input$compare == "National") {title_join <- paste("Households with homeless children per 1,000<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Households with homeless children per 1,000<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- tags$p(HTML(title_join), style = "font-size: 20px")
     valueBox(
