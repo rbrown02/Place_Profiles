@@ -496,7 +496,8 @@ server <- function(input, output, session) {
       filter(AreaName == input$Region,
              IndicatorName == "Inequality in life expectancy at birth",
              Sex == "Female")}
-    value <- as.character(format(unique(filtered_data$Value),nsmall=1))
+    if(nrow(filtered_data) == 0) {value = paste("No data available")}
+    else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
     value_comp <- as.character(format(unique(filtered_compare$Value),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Inequality in life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Inequality in life expectancy at birth<br>Female"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
@@ -521,7 +522,8 @@ server <- function(input, output, session) {
       filter(AreaName == input$Region,
              IndicatorName == "Inequality in life expectancy at birth",
              Sex == "Male")}
-    value <- as.character(format(unique(filtered_data$Value),nsmall=1))
+    if(nrow(filtered_data) == 0) {value = paste("No data available")}
+    else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
     value_comp <- as.character(format(unique(filtered_compare$Value),nsmall=1))
     if(input$compare == "National") {title_join <- paste("Inequality in life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste("Inequality in life expectancy at birth<br>Male"," - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
