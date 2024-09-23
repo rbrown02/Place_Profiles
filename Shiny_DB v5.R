@@ -25,10 +25,10 @@ regions_list <- c("East Midlands region", "East of England region", "London regi
 # Input indicator ID and the corresponding y-label depending on data type
 input_indicators_1 <- data.frame(Indicator_ID = c(90366, 90631, 93378, 
                                                   93203, 93098, 1730, 90362, 
-                                                  93553, 93759, 93739, 93103, 93758, 93701, 93736, 93014, 
+                                                  93553, 93759, 93739, 93103, 93758, 93701, 93014, 
                                                   93570, 20601, 20602, 90319, 90323, 92904, 93764, 93881, 
                                                   91871, 92500, 93085))
-input_indicators_2 <- data.frame(Indicator_ID = c(92901))
+input_indicators_2 <- data.frame(Indicator_ID = c(92901,93736))
 
 
 
