@@ -12,6 +12,7 @@ library(plotly)
 library(readxl)
 library(ggrepel)
 library(DT)
+library(quarto)
 
 # SELECT AREA TYPE FROM: 'Counties & UAs'; 'Districts & UAs','NHS Regions','Region','Sub-ICBs','ICBs'
 area_type <- 402
