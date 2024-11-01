@@ -1,12 +1,12 @@
-name: Place_Profiles
-title: Place_Profiles
+name: Place_Profiles2
+title: Place_Profiles2
 username: ovnnt7-rbrown02
 account: ovnnt7-rbrown02
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 11890947
-bundleId: 9302863
-url: https://ovnnt7-rbrown02.shinyapps.io/Place_Profiles/
+appId: 13204799
+bundleId: 9302555
+url: https://ovnnt7-rbrown02.shinyapps.io/Place_Profiles2/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE

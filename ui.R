@@ -1,3 +1,20 @@
+library(stringr)
+library(fingertipsR)
+library(forcats)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(writexl)
+library(shiny)
+library(shinydashboard)
+library(plotly)
+library(readxl)
+library(ggrepel)
+library(DT)
+source("Data_Pull.R")
+source("Themes.R")
+
 #the user interface for the Shiny dashboard 
 ui <- dashboardPage(
   dashboardHeader(tags$li(class = "dropdown",
@@ -131,7 +148,7 @@ ui <- dashboardPage(
                      valueBoxOutput("chomeless", width = 3),
                      valueBoxOutput("homeless55", width = 3),
                      valueBoxOutput("lowincome", width = 3),
-                     valueBoxOutput("lonely", width = 3)),
+                     valueBoxOutput("lonely", width = 3))
                )),
 
 #adding a 'Risk Factors' tab
