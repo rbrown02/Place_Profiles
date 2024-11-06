@@ -1,0 +1,100 @@
+---
+title: "Presenting Fingertips Data in Shiny"
+subtitle: "Rachael Brown - NECS Consultancy"
+format: 
+    revealjs:
+        theme: serif
+        chalkboard:
+            buttons: false
+        slide-number: true
+        logo: images/logo.png
+        css: styles.css
+        footer: <https://www.necsu.nhs.uk/what-we-offer/consulting-services/consultancy/>
+fontawesome: true
+---
+
+## What we will cover {.smaller}
+
+<br>
+This presentation will demonstrate how you can harness the FingertipsR package to produce a Shiny dashboard summarquartoising key metrics. We will discuss:
+<br><br>
+
+-  The brief
+-  What did we do and why?
+-  Quick demo of dashboard
+-  What issues we encountered
+-  Future developments
+
+## Brief {.smaller}
+<br>
+
+To create an overview for individual ICBs summarising published public health data - mainly from Fingertips. The metrics of interest included:
+<br><br>
+
+|                                            |                                            |
+| ------------------------------------------ | ------------------------------------------ |
+| <i class="fas fa-users icon-demographics"></i>    Population demographics | <i class="fas fa-heartbeat icon-life-expectancy"></i>    Life expectancy |
+| <i class="fas fa-graduation-cap icon-education"></i>    Education & employment | <i class="fas fa-home icon-household"></i>    Household metrics |
+| <i class="fas fa-dumbbell icon-dumbell"></i>    Physical activity & obesity | <i class="fas fa-smoking icon-smoking"></i>    Smoking & other risk factors |
+
+
+
+
+## Our Solution {.smaller}
+<br>
+
+Using the [FingertipsR package](https://github.com/ropensci/fingertipsR/tree/master), developed by PHE, to load Fingertips data into R data frames.
+
+<br>
+
+#### Presentation options:
+
+<br>
+
+| Method  | Benefits | Drawbacks |
+|------|:---------|:----------|
+| Quarto      | Quickly generate polished PDF/HTML reports   |  Static reports - need to re-generate and re-share |
+| Shiny Dashboard    | Interactive with live data refresh through API  |   Easy customisation limited by Shiny default layouts & hosting requirement |
+
+
+## Demo Time {class="no-title"}
+
+[![](images/demo.png)](https://ovnnt7-rbrown02.shinyapps.io/Place_Profiles/)
+
+## Problems we encountered
+
+<br>
+
+|        |                                            |
+| ------ | ------------------------------------------ |
+|<i class="fas fa-globe icon-map"></i> | Using Local Authorities (LAs) not ICBs |
+|<i class="fas fa-exclamation-triangle icon-break"></i> | LA boundaries changes can lead to missing data|
+|<i class="fas fa-calendar icon-calendar"></i> | Inconsistent reporting periods|
+|<i class="fas fa-clock icon-clock"></i> | Time constraints using free version of Shiny.io|
+
+
+## Future Developments {.smaller}
+<br>
+
+- Option to look at ICB data where available
+<br><br>
+
+- Adding in different publically available data. E.g.
+    - Ofcom - Digital Exclusion 
+    - OS - Open Greenspace
+<br><br>
+
+- Combining with another Shiny dahsboard which webscrapes NHSE's data (A&E, RTT, ambulance performance).
+
+## Acknowledgements & Resources {.smaller}
+
+I would like to thank Ben Murch for support in developing this dashboard and helping with the presentation. Clare Thompson also reviewed the code and fixed a lot of issues so big thank you to her!
+<br><br>
+
+Also thanks to HSMA (Dan & Sammi) without whom you would be reading this as a PowerPoint and not a cool Quarto presentation!
+<br><br>
+
+Links: 
+
+- [Dashboard](https://ovnnt7-rbrown02.shinyapps.io/Place_Profiles/)
+- [Github Repository](https://github.com/rbrown02/Place_Profiles)
