@@ -60,6 +60,10 @@ server <- function(input, output, session) {
   
   pop_data <- fingertips_data(IndicatorID = 92708,
                               AreaTypeID = 502)
+  pop_data_regions <- fingertips_data(IndicatorID = 92708,
+                                      AreaTypeID = 6)
+  
+  pop_data <- rbind(pop_data,pop_data_regions)
   
   pop_data <- pop_data %>% 
     filter(TimeperiodSortable == max(TimeperiodSortable))
@@ -70,11 +74,13 @@ server <- function(input, output, session) {
   
   pop_region_map <- pop_region_map %>%
     select(-Region)
+
+  pop_data <- pop_data %>%
+    mutate(AreaName = str_remove_all(AreaName, " \\(statistical\\)"))
   
   pop_chart_data_reg <- merge(x=pop_data, y=pop_region_map, by="AreaName", all.x=TRUE)
   
-  pop_chart_data_reg <- pop_chart_data_reg %>%
-    mutate(AreaName = str_remove_all(AreaName, " \\(statistical\\)"))
+  pop_chart_data_reg <- pop_chart_data_reg %>% distinct()
   
   output$popPlot <- renderPlot({
     selected_area <- input$area
