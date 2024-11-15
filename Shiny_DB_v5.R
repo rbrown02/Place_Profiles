@@ -14,7 +14,6 @@ library(ggrepel)
 library(DT)
 
 source("Population_Chart.R")
-source("Data_Pull.R")
 source("Themes.R")
 source("server.R")
 source("ui.R")
