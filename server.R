@@ -100,6 +100,23 @@ server <- function(input, output, session) {
                                      "60-64 yrs", "65-69 yrs", "70-74 yrs",
                                      "75-79 yrs", "80-84 yrs", "85-89 yrs", 
                                      "90+ yrs"))) 
+
+    ggplot_chart <- generate_ggplot_chart(
+      data = filtered_pop_data,
+      value = Value,
+      sex = Sex,
+      age = Age,
+      area = AreaName,
+      area_name = selected_area,
+      comparator_1 = selected_region,
+      comparator_2 = "England",
+      title = paste("Population in", as.character(year)),
+      subtitle = " ",
+      xlab = "% of total population"
+    )
+    print(ggplot_chart) 
+  })
+
   
   output$ineqfem <- renderValueBox({
     selected_area <- input$area
@@ -829,22 +846,6 @@ server <- function(input, output, session) {
     valueBox(
       formatted_value, title, color = "blue", icon = icon("users-line")
     )
-  })
-    
-    ggplot_chart <- generate_ggplot_chart(
-      data = filtered_pop_data,
-      value = Value,
-      sex = Sex,
-      age = Age,
-      area = AreaName,
-      area_name = selected_area,
-      comparator_1 = selected_region,
-      comparator_2 = "England",
-      title = paste("Population in", as.character(year)),
-      subtitle = " ",
-      xlab = "% of total population"
-    )
-    print(ggplot_chart) 
   })
   
   custom_colors <- c("#006AB4", "#ED8B00", "#960051", "#78BE20", "#605CA8")
