@@ -12,7 +12,6 @@ library(plotly)
 library(readxl)
 library(ggrepel)
 library(DT)
-source("Data_Pull.R")
 source("Themes.R")
 
 #the user interface for the Shiny dashboard 
