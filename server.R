@@ -716,15 +716,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Obesity prevalence in adults",
+             IndicatorName == "Obesity prevalence in adults, (using adjusted self-reported height and weight)",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Obesity prevalence in adults",
+             IndicatorName == "Obesity prevalence in adults, (using adjusted self-reported height and weight)",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Obesity prevalence in adults",
+             IndicatorName == "Obesity prevalence in adults, (using adjusted self-reported height and weight)",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
