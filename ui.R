@@ -1,3 +1,4 @@
+library(shinydashboard)
 library(stringr)
 library(fingertipsR)
 library(forcats)
@@ -7,11 +8,11 @@ library(readr)
 library(ggplot2)
 library(writexl)
 library(shiny)
-library(shinydashboard)
 library(plotly)
 library(readxl)
 library(ggrepel)
 library(DT)
+
 source("Themes.R")
 
 #the user interface for the Shiny dashboard 
@@ -145,7 +146,7 @@ ui <- dashboardPage(
                      valueBoxOutput("fuelpov", width = 3),
                      valueBoxOutput("homeless", width = 3),
                      valueBoxOutput("chomeless", width = 3),
-                     valueBoxOutput("homeless55", width = 3),
+                     valueBoxOutput("isolation", width = 3),
                      valueBoxOutput("lowincome", width = 3),
                      valueBoxOutput("lonely", width = 3))
                )),

@@ -25,9 +25,9 @@ regions_list <- c("East Midlands region", "East of England region", "London regi
 # Input indicator ID and the corresponding y-label depending on data type
 input_indicators_1 <- data.frame(Indicator_ID = c(90366, 90631, 93378, 
                                                   93203, 93098, 1730, 90362, 
-                                                  93553, 93759, 93739, 93738, 93758, 93701, 93014, 
+                                                  93553, 93759, 93739, 94175, 93701, 93014, 
                                                   93570, 20601, 20602, 90319, 90323, 92904, 93764, 93881, 
-                                                  91871, 92500, 93085, 92901, 93736))
+                                                  91871, 92500, 93085, 92901, 93736, 90280))
 
 indicator_ids <- input_indicators_1$Indicator_ID
 new_indicator_ids <- indicator_ids
@@ -70,11 +70,12 @@ while (i <= length(new_indicator_ids)) {
   i <- i + 1
   
   i_data_frame <- sub_data_frame %>%
+    filter(!(indicator_id == 90280 & Age != "65+ yrs")) %>%
     filter(!is.na(TimeperiodSortable)) %>%
     group_by(Sex, AreaName) %>%
     filter(TimeperiodSortable == max(TimeperiodSortable),
            Sex == sex,
-           !(indicator_id == 93758 & Age != "16+ yrs"),
+           !(indicator_id == 94175 & Age != "16+ yrs"),
            !(indicator_id == 93014 & Age != "19+ yrs"),
            !(indicator_id == 93881 & Age != "18+ yrs"),
            !(indicator_id == 91871 & Age != "School age")) %>%

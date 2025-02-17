@@ -27,8 +27,8 @@ fuel_title <- "Households in Fuel Poverty"
 childhomeless_title <- "Households with homeless children per 1,000"
 homeless_title <- "Households classed as homeless per 1,000"
 lowincome_title <- "Under 16s living in absolute low income families"
-homeless55_title <- "Aged 55+ households classed as homeless per 1,000"
-lonely_title <- "Adults who feel lonely"
+isolation_title <- "% social care users (65+) who lack social contact"
+lonely_title <- "% adults who feel lonely often or always"
 physact_title <- "Physically Active Adults"
 physactcyp_title <- "Physically Active CYP"
 recepow_title <- "Reception children overweight"
@@ -44,6 +44,9 @@ smoke_title <- "Smoking at time of delivery"
 dep_title <- "Deprivation score (IMD 2019)"
 pop_title <- "Population"
 
+source("Data_Pull.R")
+source("Population_Chart.R")
+
 server <- function(input, output, session) {
   observe({
     areas_selection <- combined_df_mapped %>%
@@ -57,67 +60,7 @@ server <- function(input, output, session) {
       filter(Region == input$dataset) %>%
       select(-Code,-Region)
   })
-  
-  pop_data <- fingertips_data(IndicatorID = 92708,
-                              AreaTypeID = 502)
-  pop_data_regions <- fingertips_data(IndicatorID = 92708,
-                                      AreaTypeID = 6)
-  
-  pop_data <- rbind(pop_data,pop_data_regions)
-  
-  pop_data <- pop_data %>% 
-    filter(TimeperiodSortable == max(TimeperiodSortable))
-  
-  year <- unique(pop_data$Timeperiod)
-  
-  pop_region_map <- read_csv("./Mappings.csv")
-  
-  pop_region_map <- pop_region_map %>%
-    select(-Region)
 
-  pop_data <- pop_data %>%
-    mutate(AreaName = str_remove_all(AreaName, " \\(statistical\\)"))
-  
-  pop_chart_data_reg <- merge(x=pop_data, y=pop_region_map, by="AreaName", all.x=TRUE)
-  
-  pop_chart_data_reg <- pop_chart_data_reg %>% distinct()
-  
-  output$popPlot <- renderPlot({
-    selected_area <- input$area
-    
-    selected_region <- input$Region
-    
-    filtered_pop_data <- pop_chart_data_reg %>%
-      filter(Age != "All ages",
-             Sex %in% c("Male", "Female"),
-             Timeperiod == year,
-             AreaName %in% c("England", selected_region, selected_area)) %>% 
-      mutate(Age = factor(Age, 
-                          levels = c("0-4 yrs", "5-9 yrs", "10-14 yrs", 
-                                     "15-19 yrs", "20-24 yrs", "25-29 yrs",
-                                     "30-34 yrs", "35-39 yrs", "40-44 yrs",
-                                     "45-49 yrs", "50-54 yrs", "55-59 yrs",
-                                     "60-64 yrs", "65-69 yrs", "70-74 yrs",
-                                     "75-79 yrs", "80-84 yrs", "85-89 yrs", 
-                                     "90+ yrs"))) 
-
-    ggplot_chart <- generate_ggplot_chart(
-      data = filtered_pop_data,
-      value = Value,
-      sex = Sex,
-      age = Age,
-      area = AreaName,
-      area_name = selected_area,
-      comparator_1 = selected_region,
-      comparator_2 = "England",
-      title = paste("Population in", as.character(year)),
-      subtitle = " ",
-      xlab = "% of total population"
-    )
-    print(ggplot_chart) 
-  })
-
-  
   output$ineqfem <- renderValueBox({
     selected_area <- input$area
     filtered_data <- combined_df %>%
@@ -473,25 +416,25 @@ server <- function(input, output, session) {
       value, title, color = "purple",icon = icon("money-bills") )
   })
   
-  output$homeless55 <- renderValueBox({
+  output$isolation <- renderValueBox({
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Homelessness - households owed a duty under the Homelessness Reduction Act (main applicant aged 55 and over)",
+             IndicatorName == "Social Isolation: percentage of adult social care users who have as much social contact as they would like",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Homelessness - households owed a duty under the Homelessness Reduction Act (main applicant aged 55 and over)",
+             IndicatorName == "Social Isolation: percentage of adult social care users who have as much social contact as they would like",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Homelessness - households owed a duty under the Homelessness Reduction Act (main applicant aged 55 and over)",
+             IndicatorName == "Social Isolation: percentage of adult social care users who have as much social contact as they would like",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
-    if(input$compare == "National") {title_join <- paste(homeless55_title,"<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
-    else {title_join <- paste(homeless55_title,"<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
+    if(input$compare == "National") {title_join <- paste(isolation_title,"<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
+    else {title_join <- paste(isolation_title,"<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- tags$p(HTML(title_join), style = "font-size: 18px")
     valueBox(
       value, title, color = "purple",icon = icon("person-cane") )
@@ -502,15 +445,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always or some of the time",
+             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always or some of the time",
+             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always or some of the time",
+             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -847,6 +790,67 @@ server <- function(input, output, session) {
       formatted_value, title, color = "blue", icon = icon("users-line")
     )
   })
+
+  pop_data <- fingertips_data(IndicatorID = 92708,
+                              AreaTypeID = 502)
+  pop_data_regions <- fingertips_data(IndicatorID = 92708,
+                                      AreaTypeID = 6)
+  
+  pop_data <- rbind(pop_data,pop_data_regions)
+  
+  pop_data <- pop_data %>% 
+    filter(TimeperiodSortable == max(TimeperiodSortable))
+  
+  year <- unique(pop_data$Timeperiod)
+  
+  pop_region_map <- read_csv("./Mappings.csv")
+  
+  pop_region_map <- pop_region_map %>%
+    select(-Region)
+  
+  pop_data <- pop_data %>%
+    mutate(AreaName = str_remove_all(AreaName, " \\(statistical\\)"))
+  
+  pop_chart_data_reg <- merge(x=pop_data, y=pop_region_map, by="AreaName", all.x=TRUE)
+  
+  pop_chart_data_reg <- pop_chart_data_reg %>%
+    distinct()
+    
+
+  output$popPlot <- renderPlot({
+    selected_area <- input$area
+    
+    selected_region <- input$Region
+    
+    filtered_pop_data <- pop_chart_data_reg %>%
+      filter(Age != "All ages",
+             Sex %in% c("Male", "Female"),
+             Timeperiod == year,
+             AreaName %in% c("England", selected_region, selected_area)) %>% 
+      mutate(Age = factor(Age, 
+                          levels = c("0-4 yrs", "5-9 yrs", "10-14 yrs", 
+                                     "15-19 yrs", "20-24 yrs", "25-29 yrs",
+                                     "30-34 yrs", "35-39 yrs", "40-44 yrs",
+                                     "45-49 yrs", "50-54 yrs", "55-59 yrs",
+                                     "60-64 yrs", "65-69 yrs", "70-74 yrs",
+                                     "75-79 yrs", "80-84 yrs", "85-89 yrs", 
+                                     "90+ yrs"))) 
+
+    ggplot_chart <- generate_ggplot_chart(
+      data = filtered_pop_data,
+      value = Value,
+      sex = Sex,
+      age = Age,
+      area = AreaName,
+      area_name = selected_area,
+      comparator_1 = selected_region,
+      comparator_2 = "England",
+      title = paste("Population in", as.character(year)),
+      subtitle = " ",
+      xlab = "% of total population"
+    )
+    print(ggplot_chart) 
+  })
   
   custom_colors <- c("#006AB4", "#ED8B00", "#960051", "#78BE20", "#605CA8")
   
@@ -895,4 +899,4 @@ server <- function(input, output, session) {
   output$LA_mappings <- renderDataTable({
     datatable(LA_mappings, options = list(pageLength = 10))
   })
-}
+  }
