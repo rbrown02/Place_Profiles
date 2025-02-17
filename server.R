@@ -65,16 +65,16 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Inequality in life expectancy at birth",
+             IndicatorID == "92901",
              Sex == "Female")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Inequality in life expectancy at birth",
+               IndicatorID == "92901",
                Sex == "Female")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Inequality in life expectancy at birth",
+             IndicatorID == "92901",
              Sex == "Female")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
@@ -91,16 +91,16 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Inequality in life expectancy at birth",
+             IndicatorID == "92901",
              Sex == "Male")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Inequality in life expectancy at birth",
+               IndicatorID == "92901",
                Sex == "Male")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Inequality in life expectancy at birth",
+             IndicatorID == "92901",
              Sex == "Male")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
@@ -116,19 +116,19 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Life expectancy at birth",
+             IndicatorID == "90366",
              Sex == "Female")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Life expectancy at birth",
+               IndicatorID == "90366",
                Sex == "Female")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Life expectancy at birth",
+             IndicatorID == "90366",
              Sex == "Female")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
-    else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
+    else {value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))}
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste(lifexp_title,"<br>Female - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste(lifexp_title,"<br>Female - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
@@ -142,19 +142,19 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Life expectancy at birth",
+             IndicatorID == "90366",
              Sex == "Male")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Life expectancy at birth",
+               IndicatorID == "90366",
                Sex == "Male")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Life expectancy at birth",
+             IndicatorID == "90366",
              Sex == "Male")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
-    else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
+    else {value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))}
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste(lifexp_title,"<br>Male - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste(lifexp_title,"<br>Male - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
@@ -167,18 +167,18 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Healthy life expectancy at birth",
+             IndicatorID == "90362",
              Sex == "Female")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Healthy life expectancy at birth",
+             IndicatorID == "90362",
              Sex == "Female")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Healthy life expectancy at birth",
+             IndicatorID == "90362",
              Sex == "Female")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
-    else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
+    else {value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))}
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste(hlifexp_title,"<br>Female - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste(hlifexp_title,"<br>Female - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
@@ -192,18 +192,18 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Healthy life expectancy at birth",
+             IndicatorID == "90362",
              Sex == "Male")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Healthy life expectancy at birth",
+             IndicatorID == "90362",
              Sex == "Male")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Healthy life expectancy at birth",
+             IndicatorID == "90362",
              Sex == "Male")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
-    else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
+    else {value <- as.character(format(round(unique(filtered_data$Value),1),nsmall=1))}
     value_comp <- as.character(format(round(unique(filtered_compare$Value),1),nsmall=1))
     if(input$compare == "National") {title_join <- paste(hlifexp_title,"<br>Male - ",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste(hlifexp_title,"<br>Male - ",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
@@ -216,20 +216,20 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "School readiness: percentage of children achieving a good level of development at the end of Reception",
+             IndicatorID == "90631",
              Sex == "Persons")
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "School readiness: percentage of children achieving a good level of development at the end of Reception",
+             IndicatorID == "90631",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "School readiness: percentage of children achieving a good level of development at the end of Reception",
+             IndicatorID == "90631",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
-    else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
+    else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste(schread_title,"<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
     else {title_join <- paste(schread_title,"<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
@@ -242,17 +242,17 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Average Attainment 8 score",
+             IndicatorID == "93378",
              Sex == "Persons")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Average Attainment 8 score",
+               IndicatorID == "93378",
                Sex == "Persons")}
     else {
       filtered_compare <- combined_df %>%
         filter(AreaName == input$Region,
-               IndicatorName == "Average Attainment 8 score",
+               IndicatorID == "93378",
                Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
@@ -268,15 +268,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "16 to 17 year olds not in education, employment or training (NEET) or whose activity is not known",
+             IndicatorID == "93203",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "16 to 17 year olds not in education, employment or training (NEET) or whose activity is not known",
+             IndicatorID == "93203",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "16 to 17 year olds not in education, employment or training (NEET) or whose activity is not known",
+             IndicatorID == "93203",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -292,16 +292,16 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Long-Term Unemployment. Rate per 1,000 working age population",
+             IndicatorID == "93098",
              Sex == "Persons")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Long-Term Unemployment. Rate per 1,000 working age population",
+               IndicatorID == "93098",
                Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Long-Term Unemployment. Rate per 1,000 working age population",
+             IndicatorID == "93098",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- as.character(format(unique(filtered_data$Value),nsmall=1))}
@@ -319,17 +319,17 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Fuel poverty (low income, low energy efficiency methodology)",
+             IndicatorID == "93759",
              Sex == "Not applicable")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Fuel poverty (low income, low energy efficiency methodology)",
+               IndicatorID == "93759",
                Sex == "Not applicable")}
     else {
       filtered_compare <- combined_df %>%
         filter(AreaName == input$Region,
-               IndicatorName == "Fuel poverty (low income, low energy efficiency methodology)",
+               IndicatorID == "93759",
                Sex == "Not applicable")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -345,16 +345,16 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Homelessness - households with dependent children owed a duty under the Homelessness Reduction Act",
+             IndicatorID == "93739",
              Sex == "Not applicable")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Homelessness - households with dependent children owed a duty under the Homelessness Reduction Act",
+               IndicatorID == "93739",
                Sex == "Not applicable")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Homelessness - households with dependent children owed a duty under the Homelessness Reduction Act",
+             IndicatorID == "93739",
              Sex == "Not applicable")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -370,15 +370,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Homelessness: households owed a duty under the Homelessness Reduction Act",
+             IndicatorID == "93736",
              Sex == "Not applicable")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Homelessness: households owed a duty under the Homelessness Reduction Act",
+             IndicatorID == "93736",
              Sex == "Not applicable")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Homelessness: households owed a duty under the Homelessness Reduction Act",
+             IndicatorID == "93736",
              Sex == "Not applicable")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -394,17 +394,17 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Children in absolute low income families (under 16s)",
+             IndicatorID == "93701",
              Sex == "Persons")
     if(input$compare == "National") {
       filtered_compare <- combined_df %>%
         filter(AreaName == "England",
-               IndicatorName == "Children in absolute low income families (under 16s)",
+               IndicatorID == "93701",
                Sex == "Persons")}
     else {
       filtered_compare <- combined_df %>%
         filter(AreaName == input$Region,
-               IndicatorName == "Children in absolute low income families (under 16s)",
+               IndicatorID == "93701",
                Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -420,15 +420,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Social Isolation: percentage of adult social care users who have as much social contact as they would like",
+             IndicatorID == "90280",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Social Isolation: percentage of adult social care users who have as much social contact as they would like",
+             IndicatorID == "90280",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Social Isolation: percentage of adult social care users who have as much social contact as they would like",
+             IndicatorID == "90280",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -445,15 +445,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always",
+             IndicatorID == "94175",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always",
+             IndicatorID == "94175",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Loneliness: Percentage of adults who feel lonely often or always",
+             IndicatorID == "94175",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -469,15 +469,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Percentage of physically active adults",
+             IndicatorID == "93014",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Percentage of physically active adults",
+             IndicatorID == "93014",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Percentage of physically active adults",
+             IndicatorID == "93014",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -493,15 +493,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Percentage of physically active children and young people",
+             IndicatorID == "93570",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Percentage of physically active children and young people",
+             IndicatorID == "93570",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Percentage of physically active children and young people",
+             IndicatorID == "93570",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -517,15 +517,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Reception prevalence of overweight (including obesity)",
+             IndicatorID == "20601",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Reception prevalence of overweight (including obesity)",
+             IndicatorID == "20601",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Reception prevalence of overweight (including obesity)",
+             IndicatorID == "20601",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -541,15 +541,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Year 6 prevalence of overweight (including obesity)",
+             IndicatorID == "20602",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Year 6 prevalence of overweight (including obesity)",
+             IndicatorID == "20602",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Year 6 prevalence of overweight (including obesity)",
+             IndicatorID == "20602",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -565,15 +565,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Year 6 prevalence of obesity (including severe obesity)",
+             IndicatorID == "90323",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Year 6 prevalence of obesity (including severe obesity)",
+             IndicatorID == "90323",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Year 6 prevalence of obesity (including severe obesity)",
+             IndicatorID == "90323",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -589,15 +589,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Reception prevalence of obesity (including severe obesity)",
+             IndicatorID == "90319",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Reception prevalence of obesity (including severe obesity)",
+             IndicatorID == "90319",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Reception prevalence of obesity (including severe obesity)",
+             IndicatorID == "90319",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -613,15 +613,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Admission episodes for alcohol-related conditions (Narrow)",
+             IndicatorID == "93764",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Admission episodes for alcohol-related conditions (Narrow)",
+             IndicatorID == "93764",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Admission episodes for alcohol-related conditions (Narrow)",
+             IndicatorID == "93764",
              Sex == "Persons")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
@@ -636,15 +636,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Admission episodes for alcohol-specific conditions - Under 18s",
+             IndicatorID == "92904",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Admission episodes for alcohol-specific conditions - Under 18s",
+             IndicatorID == "92904",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Admission episodes for alcohol-specific conditions - Under 18s",
+             IndicatorID == "92904",
              Sex == "Persons")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
@@ -659,15 +659,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Obesity prevalence in adults, (using adjusted self-reported height and weight)",
+             IndicatorID == "93881",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Obesity prevalence in adults, (using adjusted self-reported height and weight)",
+             IndicatorID == "93881",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Obesity prevalence in adults, (using adjusted self-reported height and weight)",
+             IndicatorID == "93881",
              Sex == "Persons")}
     if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -683,15 +683,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "School pupils with social, emotional and mental health needs: % of school pupils with social, emotional and mental health needs",
+             IndicatorID == "91871",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "School pupils with social, emotional and mental health needs: % of school pupils with social, emotional and mental health needs",
+             IndicatorID == "91871",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "School pupils with social, emotional and mental health needs: % of school pupils with social, emotional and mental health needs",
+             IndicatorID == "91871",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -707,15 +707,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Percentage of three year olds with experience of visually obvious tooth decay",
+             IndicatorID == "92500",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Percentage of three year olds with experience of visually obvious tooth decay",
+             IndicatorID == "92500",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Percentage of three year olds with experience of visually obvious tooth decay",
+             IndicatorID == "92500",
              Sex == "Persons")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else if(is.na(filtered_data$Value) == T) {value = paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))}
@@ -732,15 +732,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data <- combined_df %>%
       filter(AreaName == selected_area,             
-             IndicatorName == "Smoking status at time of delivery",
+             IndicatorID == "93085",
              Sex == "Female")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",             
-             IndicatorName == "Smoking status at time of delivery",
+             IndicatorID == "93085",
              Sex == "Female")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,             
-             IndicatorName == "Smoking status at time of delivery",
+             IndicatorID == "93085",
              Sex == "Female")}
     if(nrow(filtered_data) == 0) {value = paste("No data available")}
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
@@ -756,15 +756,15 @@ server <- function(input, output, session) {
     selected_area <- input$area
     filtered_data  <- combined_df %>%
       filter(AreaName == selected_area,
-             IndicatorName == "Deprivation score (IMD 2019)",
+             IndicatorID == "93553",
              Sex == "Persons")
     if(input$compare == "National") {filtered_compare <- combined_df %>%
       filter(AreaName == "England",
-             IndicatorName == "Deprivation score (IMD 2019)",
+             IndicatorID == "93553",
              Sex == "Persons")}
     else {filtered_compare <- combined_df %>%
       filter(AreaName == input$Region,
-             IndicatorName == "Deprivation score (IMD 2019)",
+             IndicatorID == "93553",
              Sex == "Persons")}
     value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)))
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)))
