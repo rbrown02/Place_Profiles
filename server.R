@@ -579,7 +579,7 @@ server <- function(input, output, session) {
     else {value <- paste(as.character(format(round(unique(filtered_data$Value),1),nsmall=1)),"%")}
     value_comp <- paste(as.character(format(round(unique(filtered_compare$Value),1),nsmall=1)),"%")
     if(input$compare == "National") {title_join <- paste(y6ob_title,"<br>",unique(filtered_data$Timeperiod),"<br>National Benchmark: ",value_comp)}
-    else {title_join <- paste(y6ob_title,unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
+    else {title_join <- paste(y6ob_title,"<br>",unique(filtered_data$Timeperiod),"<br>Regional Benchmark: ",value_comp)}
     title <- tags$p(HTML(title_join), style = "font-size: 18px")
     valueBox(
       value, title, color = "purple",icon = icon("weight-scale") )
