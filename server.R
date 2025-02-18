@@ -775,21 +775,6 @@ server <- function(input, output, session) {
       value, title, color = "blue",icon = icon("scale-unbalanced-flip") )
   })
   
-  output$pop <- renderValueBox({
-    selected_area <- input$area
-    filtered_pop <- pop_chart_data_reg %>%
-      filter(AreaName == selected_area) %>%
-      filter(Sex == "Persons") %>%
-      filter(Age == "All ages") 
-    formatted_value <- scales::comma(unique(filtered_pop$Value))
-    title_join <- paste(" ","<br>",pop_title,"<br>", "2021")
-    #change font size in the valuebox directly using the tags$p function
-      #ideally would set this across all valueboxes in the css, but can't get it to work
-    title <- tags$p(HTML(title_join), style = "font-size: 18px")
-    valueBox(
-      formatted_value, title, color = "blue", icon = icon("users-line")
-    )
-  })
 
   pop_data <- fingertips_data(IndicatorID = 92708,
                               AreaTypeID = 502)
@@ -816,7 +801,22 @@ server <- function(input, output, session) {
   pop_chart_data_reg <- pop_chart_data_reg %>%
     distinct()
     
-
+  output$pop <- renderValueBox({
+    selected_area <- input$area
+    filtered_pop <- pop_chart_data_reg %>%
+      filter(AreaName == selected_area) %>%
+      filter(Sex == "Persons") %>%
+      filter(Age == "All ages")
+    formatted_value <- scales::comma(unique(filtered_pop$Value))
+    title_join <- paste(" ","<br>",pop_title,"<br>", year)
+    #change font size in the valuebox directly using the tags$p function
+    #ideally would set this across all valueboxes in the css, but can't get it to work
+    title <- tags$p(HTML(title_join), style = "font-size: 18px")
+    valueBox(
+      formatted_value, title, color = "blue", icon = icon("users-line")
+    )
+  })
+  
   output$popPlot <- renderPlot({
     selected_area <- input$area
     
