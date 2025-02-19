@@ -71,6 +71,7 @@ while (i <= length(new_indicator_ids)) {
   
   i_data_frame <- sub_data_frame %>%
     filter(!(indicator_id == 90280 & Age != "65+ yrs")) %>%
+    filter(!(indicator_id == 90366 & Timeperiodrange != "3y")) %>%
     filter(!is.na(TimeperiodSortable)) %>%
     group_by(Sex, AreaName) %>%
     filter(TimeperiodSortable == max(TimeperiodSortable),
@@ -79,7 +80,7 @@ while (i <= length(new_indicator_ids)) {
            !(indicator_id == 93014 & Age != "19+ yrs"),
            !(indicator_id == 93881 & Age != "18+ yrs"),
            !(indicator_id == 91871 & Age != "School age")) %>%
-    select("IndicatorName", "AreaName", "Sex", "Timeperiod", "Value", "ComparedtoEnglandvalueorpercentiles")
+    select("IndicatorName", "IndicatorID", "AreaName", "Sex", "Timeperiod", "Value", "ComparedtoEnglandvalueorpercentiles")
   
   data_frames_list[[i]] <- i_data_frame
   
